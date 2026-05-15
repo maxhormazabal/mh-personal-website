@@ -1,0 +1,194 @@
+---
+import Icon from './Icon.astro';
+import { T } from '../data/translations';
+
+const pathname = new URL(Astro.url).pathname;
+const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
+
+// In a real i18n setup we would use Astro's middleware or dynamic routes.
+// For now, we'll use client-side logic to handle language switching as in the original.
+---
+
+<aside style="
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w); border-right: 1px solid var(--ink-5);
+  display: flex; flex-direction: column;
+  background: var(--surface); z-index: 100;
+  transition: background 0.2s;
+  overflow-y: auto;
+">
+  {/* Header: name + controls */}
+  <div style="padding: 28px 24px 22px; border-bottom: 1px solid var(--ink-5);">
+    <a href="/" style="
+      background: none; border: none; cursor: pointer;
+      padding: 0; margin-bottom: 14px; display: block;
+      transition: opacity 0.15s;
+    " class="logo-btn">
+      <svg width="44" height="44" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="28" y1="28" x2="28" y2="128" stroke="var(--ink)" stroke-width="2" stroke-linecap="square"/>
+        <line x1="28" y1="28" x2="112" y2="28" stroke="var(--ink)" stroke-width="2" stroke-linecap="square"/>
+        <line x1="28" y1="128" x2="100" y2="128" stroke="var(--ink)" stroke-width="2" stroke-linecap="square"/>
+        <circle cx="132" cy="26" r="6" fill="#c47a35"/>
+        <line x1="132" y1="38" x2="132" y2="82" stroke="#c47a35" stroke-width="2" stroke-linecap="round"/>
+        <polygon points="106,148 148,148 148,104" fill="none" stroke="#c47a35" stroke-width="2.5" stroke-linejoin="round"/>
+        <text x="72" y="94" font-family="Newsreader, Georgia, serif" font-size="52" font-weight="500" text-anchor="middle" fill="var(--ink)" letter-spacing="-1">MH</text>
+      </svg>
+    </a>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+      <a href="/" style="
+        font-family: var(--font-display); font-size: 20px; font-style: italic;
+        font-weight: 400; color: var(--ink); letter-spacing: -0.015em;
+        background: none; border: none; cursor: pointer;
+        padding: 0; line-height: 1.2; text-align: left;
+        text-decoration: none;
+      ">
+        Max<br />Hormazábal
+      </a>
+      <div style="display: flex; flex-direction: column; gap: 5px; padding-top: 2px;">
+        <button id="theme-toggle" title="Toggle theme" style="
+          background: none; border: 1px solid var(--ink-5); border-radius: 3px;
+          cursor: pointer; color: var(--ink-4); padding: 4px 5px;
+          display: flex; align-items: center; transition: color 0.15s, border-color 0.15s;
+        ">
+          <Icon name="moon" size={11} class="theme-icon-moon" />
+          <Icon name="sun" size={11} class="theme-icon-sun" />
+        </button>
+        <button id="lang-toggle" title="Toggle language" style="
+          background: none; border: 1px solid var(--ink-5); border-radius: 3px;
+          cursor: pointer; color: var(--ink-4); padding: 3px 5px;
+          font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em;
+          transition: color 0.15s, border-color 0.15s;
+        ">
+          <span class="lang-text">EN</span>
+        </button>
+      </div>
+    </div>
+    <p class="sidebar-bio" style="font-family: var(--font-body); font-size: 12.5px; line-height: 1.65; color: var(--ink-2);">
+      {/* Bio injected by JS */}
+    </p>
+  </div>
+
+  {/* Navigation */}
+  <nav style="padding: 12px 0; border-bottom: 1px solid var(--ink-5);">
+    {[
+      { id: 'research', icon: 'layers'   },
+      { id: 'teaching', icon: 'book-open'},
+      { id: 'writing',  icon: 'file-text'},
+      { id: 'about',    icon: 'user'     },
+    ].map(item => (
+      <a href={`/${item.id}`} class={`nav-item ${currentPath === item.id ? 'active' : ''}`} data-id={item.id} style="
+        display: flex; align-items: center; gap: 10px;
+        width: 100%; text-align: left;
+        font-family: var(--font-mono); font-size: 12px;
+        letter-spacing: 0.01em;
+        text-decoration: none;
+        padding: 9px 24px;
+        transition: color 0.15s, background 0.15s;
+      ">
+        <span class="nav-icon" style="display: flex; flex-shrink: 0;">
+          <Icon name={item.icon} size={13} />
+        </span>
+        <span class="nav-label" data-key={item.id}>{item.id}</span>
+      </a>
+    ))}
+  </nav>
+
+  {/* Connect */}
+  <div style="padding: 20px 24px;">
+    <div class="connect-heading" style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 14px;">
+      Connect
+    </div>
+    {[
+      { label: 'info@maxhormazabal.com', href: 'mailto:info@maxhormazabal.com', icon: 'mail' },
+      { label: 'github/maxhormazabal',   href: 'https://github.com/maxhormazabal', icon: 'github' },
+      { label: 'linkedin',               href: 'https://linkedin.com/in/maximiliano-hormazabal', icon: 'linkedin' },
+    ].map(item => (
+      <a href={item.href} target="_blank" rel="noopener" style="
+        font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3);
+        display: flex; align-items: center; gap: 8px;
+        text-decoration: none; padding: 5px 0;
+        transition: color 0.15s;
+      " class="connect-link">
+        <Icon name={item.icon} size={11} />
+        {item.label}
+      </a>
+    ))}
+  </div>
+</aside>
+
+<style>
+  .nav-item {
+    color: var(--ink-3);
+    background: none;
+    border-left: 2px solid transparent;
+  }
+  .nav-item.active {
+    color: var(--ink);
+    background: var(--surface-2);
+    border-left: 2px solid var(--accent);
+  }
+  .nav-item.active .nav-icon {
+    color: var(--accent);
+  }
+  .nav-item:not(.active):hover {
+    color: var(--ink-2);
+    background: var(--surface-2);
+  }
+  .logo-btn:hover { opacity: 0.7; }
+  .connect-link:hover { color: var(--ink); }
+
+  /* Theme icon visibility */
+  :global([data-theme="dark"]) .theme-icon-sun { display: block; }
+  :global([data-theme="dark"]) .theme-icon-moon { display: none; }
+  :global(:not([data-theme="dark"])) .theme-icon-sun { display: none; }
+  :global(:not([data-theme="dark"])) .theme-icon-moon { display: block; }
+</style>
+
+<script>
+  import { T } from '../data/translations';
+
+  function updateSidebar() {
+    const lang = localStorage.getItem('mh-lang') || 'en';
+    const t = T[lang as keyof typeof T];
+
+    // Update labels
+    document.querySelectorAll('.nav-label').forEach(el => {
+      const key = el.getAttribute('data-key');
+      if (key && t.nav[key as keyof typeof t.nav]) {
+        el.textContent = t.nav[key as keyof typeof t.nav];
+      }
+    });
+
+    const bioEl = document.querySelector('.sidebar-bio');
+    if (bioEl) bioEl.textContent = t.sidebar_bio;
+
+    const connectHeading = document.querySelector('.connect-heading');
+    if (connectHeading) connectHeading.textContent = t.connect_heading;
+
+    const langBtnText = document.querySelector('.lang-text');
+    if (langBtnText) langBtnText.textContent = lang === 'en' ? 'ES' : 'EN';
+  }
+
+  // Initial update
+  updateSidebar();
+
+  // Listeners
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = !isDark;
+    document.documentElement.setAttribute('data-theme', next ? 'dark' : '');
+    localStorage.setItem('mh-dark', String(next));
+  });
+
+  document.getElementById('lang-toggle')?.addEventListener('click', () => {
+    const current = localStorage.getItem('mh-lang') || 'en';
+    const next = current === 'en' ? 'es' : 'en';
+    localStorage.setItem('mh-lang', next);
+    updateSidebar();
+    // Dispatch event for other components
+    window.dispatchEvent(new CustomEvent('mh-lang-changed', { detail: { lang: next } }));
+  });
+
+  // Re-run on ViewTransitions
+  document.addEventListener('astro:after-swap', updateSidebar);
+</script>

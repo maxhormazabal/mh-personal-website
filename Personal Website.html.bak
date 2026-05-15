@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Max Hormazábal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        oklch(18% 0.04 40);
+  --ink-2:      oklch(32% 0.05 42);
+  --ink-3:      oklch(50% 0.06 45);
+  --ink-4:      oklch(68% 0.06 55);
+  --ink-5:      oklch(82% 0.04 65);
+  --surface:    oklch(97.5% 0.016 80);
+  --surface-2:  oklch(94%   0.020 78);
+  --surface-3:  oklch(90%   0.022 76);
+  --accent:         oklch(58% 0.14 55);
+  --accent-hover:   oklch(48% 0.14 45);
+  --interactive:        oklch(46% 0.12 42);
+  --interactive-hover:  oklch(38% 0.12 42);
+  --code-bg: oklch(20% 0.03 40);
+  --code-fg: oklch(88% 0.02 75);
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --sidebar-w: 248px;
+}
+
+[data-theme="dark"] {
+  --ink:    oklch(92% 0.020 75);
+  --ink-2:  oklch(75% 0.025 70);
+  --ink-3:  oklch(58% 0.030 60);
+  --ink-4:  oklch(40% 0.035 50);
+  --ink-5:  oklch(28% 0.030 45);
+  --surface:   oklch(14% 0.025 40);
+  --surface-2: oklch(18% 0.028 42);
+  --surface-3: oklch(22% 0.030 44);
+  --accent:         oklch(70% 0.13 60);
+  --accent-hover:   oklch(78% 0.12 65);
+  --interactive:        oklch(72% 0.11 55);
+  --interactive-hover:  oklch(82% 0.10 55);
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s, color 0.2s;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ink-5); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- ── Block 1: Data · Translations · Icons · App ─────────────────────── -->
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "amber"
+}/*EDITMODE-END*/;
+
+/* Translations */
+const T = {
+  en: {
+    nav: { research: 'research', teaching: 'teaching', writing: 'writing', about: 'about' },
+    sidebar_bio: "Researcher and builder at the intersection of AI, document understanding, and education. PhD candidate at CVC · UAB.",
+    taglines: ['AI Researcher', 'Document Understanding', 'AI for Education', 'Building Real Systems'],
+    intro_p1: "I'm a researcher and builder working at the intersection of AI, document understanding, and education. Currently pursuing a PhD at the Computer Vision Center (UAB), building multimodal systems and a document AI startup.",
+    intro_p2: "My broader interest lies in how these technologies can reshape the way we learn, teach, and interact with knowledge.",
+    cta_writing: 'Read writing', cta_about: 'About me',
+    recent_writing: 'Recent writing', all_writing: 'All writing →',
+    what_i_work_on: 'What I work on',
+    research_heading: 'Research',
+    research_sub: 'Publications and research work on multimodal AI and document understanding.',
+    scholar_link: 'View all on Google Scholar',
+    teaching_heading: 'Teaching',
+    teaching_sub: "I've been teaching since I was 17 — statistics, data science, and AI. Explaining something clearly is the best way to understand it deeply.",
+    philosophy_heading: 'How I teach',
+    courses_heading: 'Courses & workshops',
+    writing_heading: 'Writing',
+    writing_sub: 'Essays and notes on AI research, document understanding, and education.',
+    about_heading: 'About',
+    about_quote: "AI should not only process information — it should help people understand, learn, and think better.",
+    work_heading: 'Work', edu_heading: 'Education',
+    connect_heading: 'Connect',
+    note_placeholder: '↗ Publication entries are illustrative — replace with your actual papers, or link directly to your Google Scholar profile.',
+  },
+  es: {
+    nav: { research: 'investigación', teaching: 'docencia', writing: 'escritura', about: 'sobre mí' },
+    sidebar_bio: "Investigador y creador en la intersección de la IA, la comprensión de documentos y la educación. Doctorando en el CVC · UAB.",
+    taglines: ['Investigador en IA', 'Comprensión de Documentos', 'IA para Educación', 'Construyendo Sistemas Reales'],
+    intro_p1: "Soy investigador y creador trabajando en la intersección de la IA, la comprensión de documentos y la educación. Actualmente doctorando en el Centre de Visió per Computador (UAB), construyendo sistemas multimodales y una startup de procesamiento documental.",
+    intro_p2: "Mi interés más amplio radica en cómo estas tecnologías pueden transformar la forma en que aprendemos, enseñamos e interactuamos con el conocimiento.",
+    cta_writing: 'Leer escritura', cta_about: 'Sobre mí',
+    recent_writing: 'Escritura reciente', all_writing: 'Toda la escritura →',
+    what_i_work_on: 'En qué trabajo',
+    research_heading: 'Investigación',
+    research_sub: 'Publicaciones y trabajo de investigación en IA multimodal y comprensión de documentos.',
+    scholar_link: 'Ver todo en Google Scholar',
+    teaching_heading: 'Docencia',
+    teaching_sub: "Llevo enseñando desde los 17 años — estadística, ciencia de datos e IA. Explicar algo con claridad es la mejor forma de entenderlo en profundidad.",
+    philosophy_heading: 'Cómo enseño',
+    courses_heading: 'Cursos y talleres',
+    writing_heading: 'Escritura',
+    writing_sub: 'Ensayos y notas sobre investigación en IA, comprensión de documentos y educación.',
+    about_heading: 'Sobre mí',
+    about_quote: "La IA no solo debería procesar información — debería ayudar a las personas a entender, aprender y pensar mejor.",
+    work_heading: 'Experiencia', edu_heading: 'Educación',
+    connect_heading: 'Contacto',
+    note_placeholder: '↗ Las publicaciones son ilustrativas — reemplázalas con tus papers reales, o enlaza directamente a tu perfil de Google Scholar.',
+  },
+};
+window.__T = T;
+
+/* Icons */
+const Icon = ({ name, size = 14 }) => {
+  const p = {
+    'file-text':    <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></>,
+    'edit-2':       <><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></>,
+    'code':         <><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></>,
+    'user':         <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>,
+    'arrow-right':  <><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></>,
+    'external-link':<><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></>,
+    'github':       <><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></>,
+    'mail':         <><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></>,
+    'linkedin':     <><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></>,
+    'moon':         <><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></>,
+    'sun':          <><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></>,
+    'cpu':          <><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></>,
+    'layers':       <><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></>,
+    'book-open':    <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>,
+    'book':         <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {p[name] || null}
+    </svg>
+  );
+};
+window.__Icon = Icon;
+
+/* App */
+function App() {
+  const [page, setPage]         = useState('home');
+  const [dark, setDark]         = useState(false);
+  const [lang, setLang]         = useState('en');
+  const [tweaks, setTweaksState]= useState(TWEAK_DEFAULTS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+
+  useEffect(() => {
+    const pg = localStorage.getItem('mh-page');
+    const dk = localStorage.getItem('mh-dark');
+    const lg = localStorage.getItem('mh-lang');
+    if (pg) setPage(pg);
+    if (dk) setDark(dk === 'true');
+    if (lg) setLang(lg);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+    localStorage.setItem('mh-dark', String(dark));
+  }, [dark]);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    localStorage.setItem('mh-lang', lang);
+  }, [lang]);
+
+  /* Apply accent tweaks via CSS custom properties */
+  useEffect(() => {
+    const root = document.documentElement;
+    const accents = {
+      amber:  ['oklch(58% 0.14 55)', 'oklch(48% 0.14 45)', 'oklch(46% 0.12 42)', 'oklch(38% 0.12 42)'],
+      slate:  ['oklch(55% 0.10 255)', 'oklch(45% 0.10 255)', 'oklch(50% 0.10 255)', 'oklch(42% 0.10 255)'],
+      forest: ['oklch(50% 0.11 150)', 'oklch(42% 0.11 150)', 'oklch(48% 0.11 150)', 'oklch(40% 0.11 150)'],
+    };
+    const vals = accents[tweaks.accent] || accents.amber;
+    root.style.setProperty('--accent',              vals[0]);
+    root.style.setProperty('--accent-hover',         vals[1]);
+    root.style.setProperty('--interactive',          vals[2]);
+    root.style.setProperty('--interactive-hover',    vals[3]);
+  }, [tweaks.accent]);
+
+  /* Editmode protocol */
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode')   setTweaksOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const setTweak = (key, val) => {
+    const next = { ...tweaks, [key]: val };
+    setTweaksState(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+  };
+
+  const navigate = (p) => {
+    setPage(p);
+    localStorage.setItem('mh-page', p);
+    window.scrollTo(0, 0);
+  };
+
+  const t = T[lang];
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <window.Sidebar
+        currentPage={page} onNavigate={navigate}
+        dark={dark} onToggleDark={() => setDark(d => !d)}
+        lang={lang} onToggleLang={() => setLang(l => l === 'en' ? 'es' : 'en')}
+        t={t}
+      />
+      <main style={{ marginLeft: 'var(--sidebar-w)', flex: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {page === 'home'     && <window.HomePage     onNavigate={navigate} t={t} lang={lang} />}
+        {page === 'research' && <window.ResearchPage  t={t} lang={lang} />}
+        {page === 'teaching' && <window.TeachingPage  t={t} lang={lang} />}
+        {page === 'writing'  && <window.WritingPage   onNavigate={navigate} t={t} lang={lang} />}
+        {page === 'about'    && <window.AboutPage     t={t} lang={lang} />}
+        <window.SiteFooter t={t} />
+      </main>
+
+      {/* Tweaks panel */}
+      {tweaksOpen && (
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 400,
+          background: 'var(--surface)', border: '1px solid var(--ink-5)',
+          borderRadius: 4, padding: '18px 20px', width: 210,
+          boxShadow: '0 2px 12px oklch(14% 0.01 250 / 0.1)',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Tweaks</span>
+            <button onClick={() => { setTweaksOpen(false); window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-4)', padding: 2, fontSize: 12, lineHeight: 1 }}>✕</button>
+          </div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--ink-4)', marginBottom: 10, letterSpacing: '0.04em' }}>Accent color</div>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
+            {[
+              { id: 'amber',  bg: 'oklch(58% 0.14 55)',  label: 'Amber'  },
+              { id: 'slate',  bg: 'oklch(55% 0.10 255)', label: 'Slate'  },
+              { id: 'forest', bg: 'oklch(50% 0.11 150)', label: 'Forest' },
+            ].map(opt => (
+              <button key={opt.id} onClick={() => setTweak('accent', opt.id)} title={opt.label} style={{
+                width: 26, height: 26, borderRadius: '50%', background: opt.bg, cursor: 'pointer',
+                border: `2px solid ${tweaks.accent === opt.id ? 'var(--ink)' : 'var(--surface-3)'}`,
+                outline: 'none', transition: 'border-color 0.15s',
+              }} />
+            ))}
+          </div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-5)', marginTop: 8 }}>
+            {tweaks.accent === 'amber' ? 'Warm amber — default' : tweaks.accent === 'slate' ? 'Cool slate blue' : 'Calm forest green'}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<!-- ── Block 2: Sidebar ───────────────────────────────────────────────── -->
+<script type="text/babel">
+function Sidebar({ currentPage, onNavigate, dark, onToggleDark, lang, onToggleLang, t }) {
+  const navItems = [
+    { id: 'research', icon: 'layers'   },
+    { id: 'teaching', icon: 'book-open'},
+    { id: 'writing',  icon: 'file-text'},
+    { id: 'about',    icon: 'user'     },
+  ];
+
+  const hoverBtn = (e, enter) => {
+    e.currentTarget.style.color       = enter ? 'var(--ink)'   : 'var(--ink-4)';
+    e.currentTarget.style.borderColor = enter ? 'var(--ink-3)' : 'var(--ink-5)';
+  };
+
+  return (
+    <aside style={{
+      position: 'fixed', top: 0, left: 0, bottom: 0,
+      width: 'var(--sidebar-w)', borderRight: '1px solid var(--ink-5)',
+      display: 'flex', flexDirection: 'column',
+      background: 'var(--surface)', zIndex: 100,
+      transition: 'background 0.2s',
+      overflowY: 'auto',
+    }}>
+      {/* Header: name + controls */}
+      <div style={{ padding: '28px 24px 22px', borderBottom: '1px solid var(--ink-5)' }}>
+        {/* Isotipo logo — copied from design system assets/isotipo-mh.svg */}
+        <button onClick={() => onNavigate('home')} style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          padding: 0, marginBottom: 14, display: 'block',
+          transition: 'opacity 0.15s',
+        }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+        >
+          <svg width="44" height="44" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="28" y1="28" x2="28" y2="128" stroke="var(--ink)" strokeWidth="2" strokeLinecap="square"/>
+            <line x1="28" y1="28" x2="112" y2="28" stroke="var(--ink)" strokeWidth="2" strokeLinecap="square"/>
+            <line x1="28" y1="128" x2="100" y2="128" stroke="var(--ink)" strokeWidth="2" strokeLinecap="square"/>
+            <circle cx="132" cy="26" r="6" fill="#c47a35"/>
+            <line x1="132" y1="38" x2="132" y2="82" stroke="#c47a35" strokeWidth="2" strokeLinecap="round"/>
+            <polygon points="106,148 148,148 148,104" fill="none" stroke="#c47a35" strokeWidth="2.5" strokeLinejoin="round"/>
+            <text x="72" y="94" fontFamily="Newsreader, Georgia, serif" fontSize="52" fontWeight="500" textAnchor="middle" fill="var(--ink)" letterSpacing="-1">MH</text>
+          </svg>
+        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
+          <button onClick={() => onNavigate('home')} style={{
+            fontFamily: 'var(--font-display)', fontSize: 20, fontStyle: 'italic',
+            fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.015em',
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: 0, lineHeight: 1.2, textAlign: 'left',
+          }}>
+            Max<br />Hormazábal
+          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5, paddingTop: 2 }}>
+            <button onClick={onToggleDark} title={dark ? 'Light mode' : 'Dark mode'} style={{
+              background: 'none', border: '1px solid var(--ink-5)', borderRadius: 3,
+              cursor: 'pointer', color: 'var(--ink-4)', padding: '4px 5px',
+              display: 'flex', alignItems: 'center', transition: 'color 0.15s, border-color 0.15s',
+            }} onMouseEnter={e => hoverBtn(e, true)} onMouseLeave={e => hoverBtn(e, false)}>
+              <window.__Icon name={dark ? 'sun' : 'moon'} size={11} />
+            </button>
+            <button onClick={onToggleLang} title="Toggle language" style={{
+              background: 'none', border: '1px solid var(--ink-5)', borderRadius: 3,
+              cursor: 'pointer', color: 'var(--ink-4)', padding: '3px 5px',
+              fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.06em',
+              transition: 'color 0.15s, border-color 0.15s',
+            }} onMouseEnter={e => hoverBtn(e, true)} onMouseLeave={e => hoverBtn(e, false)}>
+              {lang === 'en' ? 'ES' : 'EN'}
+            </button>
+          </div>
+        </div>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: 12.5, lineHeight: 1.65, color: 'var(--ink-2)' }}>
+          {t.sidebar_bio}
+        </p>
+      </div>
+
+      {/* Navigation */}
+      <nav style={{ padding: '12px 0', borderBottom: '1px solid var(--ink-5)' }}>
+        {navItems.map(item => {
+          const active = currentPage === item.id;
+          const label  = t.nav[item.id];
+          return (
+            <button key={item.id} onClick={() => onNavigate(item.id)} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              width: '100%', textAlign: 'left',
+              fontFamily: 'var(--font-mono)', fontSize: 12,
+              letterSpacing: '0.01em',
+              color:      active ? 'var(--ink)'      : 'var(--ink-3)',
+              background: active ? 'var(--surface-2)' : 'none',
+              border: 'none',
+              borderLeft: `2px solid ${active ? 'var(--accent)' : 'transparent'}`,
+              cursor: 'pointer', padding: '9px 24px',
+              transition: 'color 0.15s, background 0.15s',
+            }}
+              onMouseEnter={e => { if (!active) { e.currentTarget.style.color = 'var(--ink-2)'; e.currentTarget.style.background = 'var(--surface-2)'; }}}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'none'; }}}
+            >
+              <span style={{ color: active ? 'var(--accent)' : 'var(--ink-4)', display: 'flex', flexShrink: 0 }}>
+                <window.__Icon name={item.icon} size={13} />
+              </span>
+              {label}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Connect */}
+      <div style={{ padding: '20px 24px' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 14 }}>
+          {t.connect_heading}
+        </div>
+        {[
+          { label: 'info@maxhormazabal.com', href: 'mailto:info@maxhormazabal.com', icon: 'mail' },
+          { label: 'github/maxhormazabal',   href: 'https://github.com/maxhormazabal', icon: 'github' },
+          { label: 'linkedin',               href: 'https://linkedin.com/in/maximiliano-hormazabal', icon: 'linkedin' },
+        ].map(item => (
+          <a key={item.label} href={item.href} target="_blank" rel="noopener" style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-3)',
+            display: 'flex', alignItems: 'center', gap: 8,
+            textDecoration: 'none', padding: '5px 0',
+            transition: 'color 0.15s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--ink)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--ink-3)'}
+          >
+            <window.__Icon name={item.icon} size={11} />
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </aside>
+  );
+}
+window.Sidebar = Sidebar;
+</script>
+
+<!-- ── Block 3: Home + Writing ────────────────────────────────────────── -->
+<script type="text/babel">
+const { useState: useStateW } = React;
+
+const allPosts = [
+  { date: 'Apr 2026', en: 'On document layout as a first-class model input',   es: 'El layout del documento como input de primer orden',       type: 'essay', tags: ['document-ai','multimodal'], mins: 9  },
+  { date: 'Feb 2026', en: 'Teaching AI to a room with no CS background',        es: 'Enseñar IA a quien no sabe programar',                     type: 'essay', tags: ['education','pedagogy'],     mins: 7  },
+  { date: 'Jan 2026', en: 'A working note on table extraction from PDFs',        es: 'Nota de trabajo: extracción de tablas en PDFs',            type: 'note',  tags: ['document-ai'],              mins: 5  },
+  { date: 'Nov 2025', en: "What 'multimodal' really means — and doesn't",        es: 'Lo que "multimodal" realmente significa (y lo que no)',    type: 'essay', tags: ['multimodal','nlp'],         mins: 11 },
+  { date: 'Sep 2025', en: 'On the gap between research and production',           es: 'La brecha entre investigación y producción',               type: 'essay', tags: ['engineering','research'],   mins: 8  },
+  { date: 'Jul 2025', en: 'Why I still teach after seven years',                  es: 'Por qué sigo enseñando después de siete años',            type: 'essay', tags: ['education'],                mins: 6  },
+  { date: 'May 2025', en: 'Reading notes: LayoutLM and its successors',           es: 'Notas de lectura: LayoutLM y sus sucesores',              type: 'note',  tags: ['document-ai','paper-notes'], mins: 5  },
+];
+window.__allPosts = allPosts;
+
+/* ── Illustration placeholder ─────────────────────────────────────────── */
+const IllustrationPlaceholder = () => (
+  <svg width="180" height="168" viewBox="0 0 268 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>{`
+        @keyframes ilFloat  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        @keyframes ilFloat2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+        @keyframes ilBlink  { 0%,94%,100%{opacity:1} 47%,53%{opacity:0} }
+        @keyframes ilPulse  { 0%,100%{opacity:0.25} 50%{opacity:0.85} }
+        @keyframes ilSteam  { 0%{opacity:0;transform:translateY(0)} 35%{opacity:0.55} 100%{opacity:0;transform:translateY(-13px)} }
+        .il-p1{animation:ilFloat  3.1s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
+        .il-p2{animation:ilFloat2 3.9s ease-in-out infinite 0.6s;transform-box:fill-box;transform-origin:50% 50%}
+        .il-blink{animation:ilBlink 1.15s step-end infinite}
+        .il-n1{animation:ilPulse 2.4s ease-in-out infinite}
+        .il-n2{animation:ilPulse 2.4s ease-in-out infinite 0.8s}
+        .il-n3{animation:ilPulse 2.4s ease-in-out infinite 1.6s}
+        .il-s1{animation:ilSteam 2.1s ease-out infinite}
+        .il-s2{animation:ilSteam 2.1s ease-out infinite 0.7s}
+      `}</style>
+    </defs>
+
+    {/* Background frame */}
+    <rect x="2" y="2" width="264" height="248" rx="10"
+      style={{fill:'var(--surface-2)',stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+
+    {/* Neural network — upper right */}
+    <line x1="200" y1="30" x2="234" y2="50" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+    <line x1="200" y1="30" x2="218" y2="14" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+    <line x1="234" y1="50" x2="250" y2="34" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+    <line x1="234" y1="50" x2="240" y2="68" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+    <line x1="200" y1="30" x2="240" y2="68" style={{stroke:'var(--ink-5)',strokeWidth:'0.8'}}/>
+    <circle cx="200" cy="30" r="5" className="il-n1" style={{fill:'var(--accent)'}}/>
+    <circle cx="234" cy="50" r="4" className="il-n2" style={{fill:'var(--interactive)'}}/>
+    <circle cx="218" cy="14" r="3" className="il-n3" style={{fill:'var(--ink-4)'}}/>
+    <circle cx="250" cy="34" r="3"                   style={{fill:'var(--ink-5)'}}/>
+    <circle cx="240" cy="68" r="4" className="il-n1" style={{fill:'var(--accent)'}}/>
+
+    {/* Floating paper 1 — upper left */}
+    <g className="il-p1">
+      <rect x="16" y="26" width="46" height="58" rx="3"
+        style={{fill:'var(--surface)',stroke:'var(--ink-4)',strokeWidth:'1'}}/>
+      <line x1="24" y1="39" x2="54" y2="39" style={{stroke:'var(--ink-3)',strokeWidth:'1.5'}}/>
+      <line x1="24" y1="47" x2="54" y2="47" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+      <line x1="24" y1="54" x2="48" y2="54" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+      <line x1="24" y1="61" x2="51" y2="61" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+      <line x1="24" y1="68" x2="42" y2="68" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+    </g>
+
+    {/* Floating paper 2 — right middle */}
+    <g className="il-p2">
+      <rect x="205" y="86" width="40" height="50" rx="3"
+        style={{fill:'var(--surface)',stroke:'var(--ink-4)',strokeWidth:'1',opacity:'0.9'}}/>
+      <line x1="213" y1="98"  x2="237" y2="98"  style={{stroke:'var(--ink-4)',strokeWidth:'1.2'}}/>
+      <line x1="213" y1="106" x2="237" y2="106" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+      <line x1="213" y1="113" x2="228" y2="113" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+      <line x1="213" y1="120" x2="233" y2="120" style={{stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+    </g>
+
+    {/* Head */}
+    <ellipse cx="134" cy="76" rx="26" ry="28"
+      style={{fill:'var(--surface)',stroke:'var(--ink-3)',strokeWidth:'1.5'}}/>
+    {/* Hair */}
+    <path d="M112 72 Q114 51 134 49 Q154 47 156 64 Q151 57 134 57 Q118 59 112 72Z"
+      style={{fill:'var(--ink-2)'}}/>
+    {/* Eyes */}
+    <circle cx="126" cy="78" r="2.2" style={{fill:'var(--ink-2)'}}/>
+    <circle cx="142" cy="78" r="2.2" style={{fill:'var(--ink-2)'}}/>
+    {/* Smile */}
+    <path d="M126 89 Q134 95 142 89"
+      style={{stroke:'var(--ink-3)',strokeWidth:'1.5',fill:'none',strokeLinecap:'round'}}/>
+    {/* Neck */}
+    <rect x="128" y="102" width="12" height="13" rx="2"
+      style={{fill:'var(--surface)',stroke:'var(--ink-3)',strokeWidth:'1'}}/>
+
+    {/* Body */}
+    <path d="M104 188 Q107 124 121 120 L134 116 L147 120 Q161 124 164 188Z"
+      style={{fill:'var(--surface-3)',stroke:'var(--ink-3)',strokeWidth:'1.5'}}/>
+    {/* Collar detail */}
+    <path d="M126 116 L134 126 L142 116"
+      style={{stroke:'var(--ink-3)',strokeWidth:'1',fill:'none'}}/>
+
+    {/* Desk */}
+    <rect x="14" y="190" width="240" height="9" rx="2"
+      style={{fill:'oklch(85% 0.025 74)',stroke:'var(--ink-5)',strokeWidth:'1'}}/>
+
+    {/* Books left */}
+    <rect x="22" y="152" width="13" height="38" rx="1" style={{fill:'var(--interactive)',opacity:'0.7'}}/>
+    <rect x="37" y="158" width="11" height="32" rx="1" style={{fill:'var(--accent)',opacity:'0.7'}}/>
+    <rect x="50" y="164" width="10" height="26" rx="1" style={{fill:'var(--ink-3)',opacity:'0.5'}}/>
+
+    {/* Laptop screen */}
+    <rect x="90" y="136" width="126" height="78" rx="4"
+      style={{fill:'var(--ink)',opacity:'0.88'}}/>
+    <rect x="94" y="140" width="118" height="70" rx="2"
+      style={{fill:'var(--code-bg)'}}/>
+    <line x1="102" y1="150" x2="162" y2="150" style={{stroke:'var(--accent)',strokeWidth:'1.5',opacity:'0.9'}}/>
+    <line x1="102" y1="158" x2="144" y2="158" style={{stroke:'oklch(88% 0.02 75)',strokeWidth:'1',opacity:'0.55'}}/>
+    <line x1="102" y1="166" x2="156" y2="166" style={{stroke:'oklch(88% 0.02 75)',strokeWidth:'1',opacity:'0.55'}}/>
+    <line x1="102" y1="174" x2="130" y2="174" style={{stroke:'var(--interactive)',strokeWidth:'1',opacity:'0.75'}}/>
+    <line x1="102" y1="182" x2="150" y2="182" style={{stroke:'oklch(88% 0.02 75)',strokeWidth:'1',opacity:'0.55'}}/>
+    <line x1="102" y1="190" x2="138" y2="190" style={{stroke:'oklch(88% 0.02 75)',strokeWidth:'1',opacity:'0.5'}}/>
+    {/* Cursor */}
+    <rect x="102" y="198" width="2" height="9" className="il-blink"
+      style={{fill:'var(--interactive)'}}/>
+
+    {/* Laptop base */}
+    <path d="M84 214 L218 214 L226 222 L76 222Z"
+      style={{fill:'var(--ink-2)',opacity:'0.6'}}/>
+
+    {/* Coffee cup */}
+    <rect x="232" y="162" width="22" height="26" rx="2"
+      style={{fill:'var(--surface)',stroke:'var(--ink-4)',strokeWidth:'1.5'}}/>
+    <path d="M254 169 Q262 169 262 175 Q262 181 254 181"
+      style={{stroke:'var(--ink-4)',strokeWidth:'1.5',fill:'none'}}/>
+    <ellipse cx="243" cy="164" rx="9" ry="2"
+      style={{fill:'var(--ink-3)',opacity:'0.4'}}/>
+    <path d="M238 160 Q241 153 238 145" className="il-s1"
+      style={{stroke:'var(--ink-4)',strokeWidth:'1.2',fill:'none',strokeLinecap:'round'}}/>
+    <path d="M245 160 Q248 152 245 143" className="il-s2"
+      style={{stroke:'var(--ink-4)',strokeWidth:'1.2',fill:'none',strokeLinecap:'round'}}/>
+
+    {/* Caption */}
+    <text x="134" y="244" textAnchor="middle"
+      style={{fontFamily:'var(--font-mono)',fontSize:'7.5px',fill:'var(--ink-5)',letterSpacing:'0.08em'}}>
+      illustration · placeholder
+    </text>
+  </svg>
+);
+
+function HomePage({ onNavigate, t, lang }) {
+  const tagColors = ['var(--interactive)', 'var(--ink-2)', 'var(--accent)', 'var(--ink-3)'];
+
+  return (
+    <div style={{ padding: '64px 64px 80px', maxWidth: 820, width: '100%' }}>
+
+      {/* Hero — single column: illustration → tags → intro → CTAs */}
+      <div style={{ marginBottom: 64 }}>
+
+        {/* Illustration — top left, avatar-sized */}
+        <div style={{ marginBottom: 28 }}>
+          <IllustrationPlaceholder />
+        </div>
+
+        {/* Tag chips */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 28 }}>
+          {t.taglines.map((tag, i) => (
+            <span key={i} style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              letterSpacing: '0.04em',
+              background: tagColors[i],
+              color: 'var(--surface)',
+              borderRadius: 3,
+              padding: '5px 11px',
+              display: 'inline-block',
+              lineHeight: 1,
+            }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Intro */}
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.75, color: 'var(--ink-2)', marginBottom: 14, maxWidth: 520, textWrap: 'pretty' }}>
+          {t.intro_p1}
+        </p>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.75, color: 'var(--ink-2)', marginBottom: 32, maxWidth: 520, textWrap: 'pretty' }}>
+          {t.intro_p2}
+        </p>
+
+        {/* CTAs */}
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <button onClick={() => onNavigate('writing')} style={{
+            fontFamily: 'var(--font-mono)', fontSize: 12.5, letterSpacing: '0.02em',
+            padding: '9px 18px', borderRadius: 4,
+            background: 'var(--ink)', color: 'var(--surface)',
+            border: '1px solid var(--ink)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 7,
+            transition: 'background 0.15s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--ink-2)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--ink)'}
+          >
+            {t.cta_writing} <window.__Icon name="arrow-right" size={12} />
+          </button>
+          <button onClick={() => onNavigate('about')} style={{
+            fontFamily: 'var(--font-mono)', fontSize: 12.5, letterSpacing: '0.02em',
+            padding: '9px 18px', borderRadius: 4,
+            background: 'transparent', color: 'var(--ink)',
+            border: '1px solid var(--ink-4)', cursor: 'pointer',
+            transition: 'background 0.15s, border-color 0.15s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-2)'; e.currentTarget.style.borderColor = 'var(--ink-3)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--ink-4)'; }}
+          >
+            {t.cta_about}
+          </button>
+        </div>
+      </div>
+
+      <hr style={{ border: 'none', borderTop: '1px solid var(--ink-5)', marginBottom: 48 }} />
+
+      {/* Recent writing */}
+      <section style={{ marginBottom: 60 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 20 }}>
+          {t.recent_writing}
+        </div>
+        {allPosts.slice(0, 5).map((post, i) => {
+          const title = lang === 'en' ? post.en : post.es;
+          return (
+            <button key={i} onClick={() => {}} style={{
+              display: 'flex', alignItems: 'baseline', gap: 20,
+              padding: '11px 0', width: '100%', textAlign: 'left',
+              background: 'none', border: 'none',
+              borderTop: i === 0 ? '1px solid var(--ink-5)' : 'none',
+              borderBottom: '1px solid var(--ink-5)',
+              cursor: 'default',
+            }}
+              onMouseEnter={e => e.currentTarget.querySelector('.pt').style.color = 'var(--interactive)'}
+              onMouseLeave={e => e.currentTarget.querySelector('.pt').style.color = 'var(--ink)'}
+            >
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)', width: 68, flexShrink: 0 }}>{post.date}</span>
+              <span className="pt" style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink)', lineHeight: 1.4, flex: 1, paddingRight: 16, transition: 'color 0.15s', textWrap: 'pretty' }}>{title}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, background: 'var(--surface-2)', border: '1px solid var(--ink-5)', borderRadius: 2, padding: '2px 6px', color: 'var(--ink-3)', whiteSpace: 'nowrap' }}>{post.type}</span>
+            </button>
+          );
+        })}
+        <button onClick={() => onNavigate('writing')} style={{
+          marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 11.5,
+          color: 'var(--interactive)', background: 'none', border: 'none',
+          cursor: 'pointer', letterSpacing: '0.02em', padding: 0,
+          transition: 'color 0.15s',
+        }}
+          onMouseEnter={e => e.currentTarget.style.color = 'var(--interactive-hover)'}
+          onMouseLeave={e => e.currentTarget.style.color = 'var(--interactive)'}
+        >
+          {t.all_writing}
+        </button>
+      </section>
+
+      {/* What I work on */}
+      <section>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 20 }}>
+          {t.what_i_work_on}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {[
+            { icon: 'layers',    en: 'Document AI',     es: 'IA Documental',   den: 'Extracting structure and meaning from PDFs, forms, and tables using layout-aware multimodal models.', des: 'Extraer estructura y significado de PDFs, formularios y tablas con modelos multimodales.' },
+            { icon: 'cpu',       en: 'Multimodal NLP',  es: 'NLP Multimodal',  den: 'Models that reason jointly over text, visual layout, and spatial document structure.',               des: 'Modelos que razonan conjuntamente sobre texto, layout visual y estructura espacial del documento.' },
+            { icon: 'book-open', en: 'Education',       es: 'Educación',       den: 'Teaching data science and AI — clearly, patiently. Since I was 17.',                                  des: 'Enseñando ciencia de datos e IA — con claridad y paciencia. Desde los 17 años.' },
+            { icon: 'code',      en: 'Building',        es: 'Construcción',    den: 'Turning research into products — from experiments to real-world AI systems.',                         des: 'Convertir investigación en productos — de experimentos a sistemas de IA reales.' },
+          ].map((item, i) => (
+            <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--ink-5)', borderRadius: 4, padding: '18px' }}>
+              <div style={{ color: 'var(--ink-4)', marginBottom: 10 }}><window.__Icon name={item.icon} size={16} /></div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 400, color: 'var(--ink)', marginBottom: 7, lineHeight: 1.25 }}>
+                {lang === 'en' ? item.en : item.es}
+              </div>
+              <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.65 }}>
+                {lang === 'en' ? item.den : item.des}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Recent research */}
+      <section style={{ marginTop: 56 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 20 }}>
+          {lang === 'en' ? 'Recent research' : 'Investigación reciente'}
+        </div>
+        {(window.__pubs || []).slice(0, 3).map((pub, i) => {
+          const title = lang === 'en' ? pub.en : pub.es;
+          const rTypeBg = { conference: 'var(--interactive)', workshop: 'var(--accent)', preprint: 'var(--ink-3)' };
+          return (
+            <button key={i} onClick={() => onNavigate('research')} style={{
+              display: 'flex', alignItems: 'baseline', gap: 20,
+              padding: '11px 0', width: '100%', textAlign: 'left',
+              background: 'none', border: 'none',
+              borderTop: i === 0 ? '1px solid var(--ink-5)' : 'none',
+              borderBottom: '1px solid var(--ink-5)',
+              cursor: 'pointer',
+            }}
+              onMouseEnter={e => e.currentTarget.querySelector('.rt').style.color = 'var(--interactive)'}
+              onMouseLeave={e => e.currentTarget.querySelector('.rt').style.color = 'var(--ink)'}
+            >
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)', width: 68, flexShrink: 0 }}>{pub.year}</span>
+              <span className="rt" style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink)', lineHeight: 1.4, flex: 1, paddingRight: 16, transition: 'color 0.15s', textWrap: 'pretty' }}>{title}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, background: rTypeBg[pub.type] || 'var(--ink-3)', color: 'var(--surface)', borderRadius: 2, padding: '2px 6px', whiteSpace: 'nowrap' }}>
+                {lang === 'en' ? pub.type : (pub.type === 'conference' ? 'conferencia' : pub.type === 'workshop' ? 'taller' : 'preprint')}
+              </span>
+            </button>
+          );
+        })}
+        <button onClick={() => onNavigate('research')} style={{
+          marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 11.5,
+          color: 'var(--interactive)', background: 'none', border: 'none',
+          cursor: 'pointer', letterSpacing: '0.02em', padding: 0, transition: 'color 0.15s',
+        }}
+          onMouseEnter={e => e.currentTarget.style.color = 'var(--interactive-hover)'}
+          onMouseLeave={e => e.currentTarget.style.color = 'var(--interactive)'}
+        >
+          {lang === 'en' ? 'All research →' : 'Toda la investigación →'}
+        </button>
+      </section>
+    </div>
+  );
+}
+window.HomePage = HomePage;
+
+function WritingPage({ t, lang }) {
+  const [filter, setFilter] = useStateW('all');
+  const filtered = filter === 'all' ? allPosts : allPosts.filter(p => p.type === filter);
+
+  return (
+    <div style={{ padding: '64px 64px 80px', maxWidth: 760 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 44, fontWeight: 300, letterSpacing: '-0.025em', color: 'var(--ink)', marginBottom: 10, fontStyle: 'italic' }}>
+        {t.writing_heading}
+      </h1>
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink-2)', lineHeight: 1.65, marginBottom: 36, maxWidth: 440 }}>
+        {t.writing_sub}
+      </p>
+
+      {/* Filter tabs */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--ink-5)', marginBottom: 32 }}>
+        {['all', 'essay', 'note'].map(f => (
+          <button key={f} onClick={() => setFilter(f)} style={{
+            fontFamily: 'var(--font-mono)', fontSize: 12,
+            color: filter === f ? 'var(--ink)' : 'var(--ink-3)',
+            background: 'none', border: 'none',
+            borderBottom: `2px solid ${filter === f ? 'var(--ink)' : 'transparent'}`,
+            marginBottom: -1, padding: '8px 16px 8px 0', cursor: 'pointer',
+            letterSpacing: '0.02em', transition: 'color 0.15s',
+          }}>{f}</button>
+        ))}
+      </div>
+
+      {filtered.map((post, i) => {
+        const title = lang === 'en' ? post.en : post.es;
+        return (
+          <button key={i} onClick={() => {}} style={{
+            display: 'flex', alignItems: 'flex-start', gap: 20, padding: '14px 0',
+            width: '100%', textAlign: 'left',
+            background: 'none', border: 'none',
+            borderBottom: i < filtered.length - 1 ? '1px solid var(--ink-5)' : 'none',
+            cursor: 'default',
+          }}
+            onMouseEnter={e => e.currentTarget.querySelector('.wt').style.color = 'var(--interactive)'}
+            onMouseLeave={e => e.currentTarget.querySelector('.wt').style.color = 'var(--ink)'}
+          >
+            <div style={{ paddingTop: 1, width: 70, flexShrink: 0 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)', display: 'block', marginBottom: 2 }}>{post.date}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-5)' }}>{post.mins} min</span>
+            </div>
+            <div>
+              <div className="wt" style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink)', lineHeight: 1.4, marginBottom: 7, transition: 'color 0.15s', textWrap: 'pretty' }}>{title}</div>
+              <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, background: 'var(--surface-2)', border: '1px solid var(--ink-5)', borderRadius: 2, padding: '2px 6px', color: 'var(--ink-3)' }}>{post.type}</span>
+                {post.tags.map(tag => (
+                  <span key={tag} style={{ fontFamily: 'var(--font-mono)', fontSize: 9, background: 'transparent', border: '1px solid var(--ink-5)', borderRadius: 2, padding: '2px 6px', color: 'var(--ink-4)' }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+window.WritingPage = WritingPage;
+</script>
+
+<!-- ── Block 4: Research + Teaching ──────────────────────────────────── -->
+<script type="text/babel">
+const pubs = [
+  {
+    year: '2025', type: 'conference', venue: 'ICDAR 2025',
+    en: 'Multimodal Document Understanding with Layout-Aware Transformer Models',
+    es: 'Comprensión Multimodal de Documentos con Modelos Transformer con Conciencia de Layout',
+    authors: 'Hormazábal M., et al.',
+    aen: 'We present an approach to document understanding that integrates spatial layout information with textual content through a multimodal transformer architecture, achieving strong results on document parsing benchmarks.',
+    aes: 'Presentamos un enfoque para la comprensión de documentos que integra información de layout espacial con contenido textual mediante una arquitectura transformer multimodal.',
+  },
+  {
+    year: '2024', type: 'workshop', venue: 'Document Analysis Workshop, 2024',
+    en: 'Visual Information Extraction from Complex Document Layouts',
+    es: 'Extracción de Información Visual en Documentos con Layouts Complejos',
+    authors: 'Hormazábal M., et al.',
+    aen: 'An investigation into methods for extracting structured information from documents with complex visual layouts — tables, forms, and mixed-content pages — using vision-language models.',
+    aes: 'Una investigación sobre métodos para extraer información estructurada de documentos con layouts visuales complejos, incluyendo tablas, formularios y páginas con contenido mixto.',
+  },
+  {
+    year: '2024', type: 'preprint', venue: 'arXiv preprint',
+    en: 'Towards Explainable Document AI: Interpretability in Layout Understanding',
+    es: 'Hacia una IA Documental Explicable: Interpretabilidad en la Comprensión de Layout',
+    authors: 'Hormazábal M., et al.',
+    aen: 'This work examines the interpretability of document understanding models, proposing methods to make spatial reasoning more transparent and traceable.',
+    aes: 'Este trabajo examina la interpretabilidad de los modelos de comprensión de documentos, proponiendo métodos para hacer el razonamiento espacial más transparente y trazable.',
+  },
+];
+window.__pubs = pubs;
+
+const typeBg = { conference: 'var(--interactive)', workshop: 'var(--accent)', preprint: 'var(--ink-3)' };
+
+function ResearchPage({ t, lang }) {
+  return (
+    <div style={{ padding: '64px 64px 80px', maxWidth: 760 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 44, fontWeight: 300, letterSpacing: '-0.025em', color: 'var(--ink)', marginBottom: 10, fontStyle: 'italic' }}>
+        {t.research_heading}
+      </h1>
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink-2)', lineHeight: 1.65, marginBottom: 10, maxWidth: 480 }}>
+        {t.research_sub}
+      </p>
+      <a href="https://scholar.google.com/citations?user=jOUDgfEAAAAJ&hl=es" target="_blank" rel="noopener" style={{
+        fontFamily: 'var(--font-mono)', fontSize: 11.5, color: 'var(--interactive)',
+        textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 5,
+        marginBottom: 48, transition: 'color 0.15s',
+      }}
+        onMouseEnter={e => e.currentTarget.style.color = 'var(--interactive-hover)'}
+        onMouseLeave={e => e.currentTarget.style.color = 'var(--interactive)'}
+      >
+        {t.scholar_link} <window.__Icon name="external-link" size={11} />
+      </a>
+
+      <div>
+        {pubs.map((pub, i) => (
+          <div key={i} style={{ padding: '26px 0', borderBottom: i < pubs.length - 1 ? '1px solid var(--ink-5)' : 'none' }}>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, borderRadius: 2, padding: '2px 7px', color: 'var(--surface)', background: typeBg[pub.type] || 'var(--ink-3)' }}>
+                {lang === 'en' ? pub.type : (pub.type === 'conference' ? 'conferencia' : pub.type === 'workshop' ? 'taller' : 'preprint')}
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-3)' }}>{pub.venue}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-5)' }}>{pub.year}</span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 400, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+              {lang === 'en' ? pub.en : pub.es}
+            </div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-4)', marginBottom: 12 }}>{pub.authors}</div>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.72, marginBottom: 12, maxWidth: 580 }}>
+              {lang === 'en' ? pub.aen : pub.aes}
+            </p>
+            <a href="https://scholar.google.com/citations?user=jOUDgfEAAAAJ&hl=es" target="_blank" rel="noopener" style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--interactive)',
+              textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4,
+              transition: 'color 0.15s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--interactive-hover)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--interactive)'}
+            >
+              Google Scholar <window.__Icon name="external-link" size={10} />
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop: 40, padding: '14px 18px', background: 'var(--surface-2)', border: '1px solid var(--ink-5)', borderRadius: 4, fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-3)', lineHeight: 1.65 }}>
+        {t.note_placeholder}
+      </div>
+    </div>
+  );
+}
+window.ResearchPage = ResearchPage;
+
+const coursesEN = [
+  { title: 'Statistics for Data Science',           years: '2016–2022',   context: 'Universidad del Bío-Bío, Chile',   level: 'Undergraduate', icon: 'book'      },
+  { title: 'Machine Learning Fundamentals',          years: '2019–present', context: 'Various institutions',             level: 'Intermediate',  icon: 'cpu'       },
+  { title: 'Python for Data Engineering',            years: '2022–2023',   context: 'NTT DATA',                         level: 'Professional',  icon: 'code'      },
+  { title: 'Introduction to AI & Neural Networks',   years: '2023–present', context: 'Graduate seminar, USC / UAB',      level: 'Graduate',      icon: 'layers'    },
+];
+const coursesES = [
+  { title: 'Estadística para Ciencia de Datos',     years: '2016–2022',   context: 'Universidad del Bío-Bío, Chile',  level: 'Grado',       icon: 'book'   },
+  { title: 'Fundamentos de Machine Learning',        years: '2019–presente', context: 'Diversas instituciones',          level: 'Intermedio',  icon: 'cpu'    },
+  { title: 'Python para Ingeniería de Datos',        years: '2022–2023',   context: 'NTT DATA',                        level: 'Profesional', icon: 'code'   },
+  { title: 'Introducción a la IA y Redes Neuronales',years: '2023–presente', context: 'Seminario posgrado, USC / UAB',   level: 'Posgrado',    icon: 'layers' },
+];
+
+function TeachingPage({ t, lang }) {
+  const courses = lang === 'en' ? coursesEN : coursesES;
+  return (
+    <div style={{ padding: '64px 64px 80px', maxWidth: 720 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 44, fontWeight: 300, letterSpacing: '-0.025em', color: 'var(--ink)', marginBottom: 10, fontStyle: 'italic' }}>
+        {t.teaching_heading}
+      </h1>
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-2)', lineHeight: 1.72, marginBottom: 52, maxWidth: 500 }}>
+        {t.teaching_sub}
+      </p>
+
+      {/* Philosophy quote */}
+      <section style={{ marginBottom: 52 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 20 }}>
+          {t.philosophy_heading}
+        </div>
+        <blockquote style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 22, fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, lineHeight: 1.5, color: 'var(--ink-2)', letterSpacing: '-0.01em' }}>
+          {t.about_quote}
+        </blockquote>
+      </section>
+
+      {/* Courses */}
+      <section>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 20 }}>
+          {t.courses_heading}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {courses.map((c, i) => (
+            <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--ink-5)', borderRadius: 4, padding: '18px 22px', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+              <div style={{ color: 'var(--ink-4)', paddingTop: 2, flexShrink: 0 }}>
+                <window.__Icon name={c.icon} size={16} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 400, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.25 }}>{c.title}</div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-3)' }}>{c.context}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-4)' }}>{c.years}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, background: 'var(--surface)', border: '1px solid var(--ink-5)', borderRadius: 2, padding: '2px 7px', color: 'var(--ink-4)' }}>{c.level}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+window.TeachingPage = TeachingPage;
+</script>
+
+<!-- ── Block 5: About + Footer ────────────────────────────────────────── -->
+<script type="text/babel">
+const workEN = [
+  { year: '2023–',    role: 'PhD Researcher',  org: 'Computer Vision Center (CVC · UAB)',       note: 'Multimodal document understanding' },
+  { year: '2023–',    role: 'Founder',          org: 'Document AI startup',                      note: 'Document processing & field extraction' },
+  { year: '2022–23',  role: 'Data Engineer',    org: 'NTT DATA',                                 note: null },
+  { year: '2016–',    role: 'Teacher',          org: 'Independent',                              note: 'Statistics, data science, AI' },
+];
+const workES = [
+  { year: '2023–',    role: 'Investigador PhD', org: 'Centre de Visió per Computador (CVC · UAB)', note: 'Comprensión multimodal de documentos' },
+  { year: '2023–',    role: 'Fundador',         org: 'Startup de IA documental',                  note: 'Procesamiento y extracción de documentos' },
+  { year: '2022–23',  role: 'Data Engineer',    org: 'NTT DATA',                                  note: null },
+  { year: '2016–',    role: 'Docente',          org: 'Independiente',                             note: 'Estadística, ciencia de datos, IA' },
+];
+const eduEN = [
+  { year: '2022–24', degree: 'MSc Artificial Intelligence',  school: 'University of Santiago de Compostela', loc: 'Galicia, Spain' },
+  { year: '2017–21', degree: 'BEng Industrial Engineering',  school: 'University of Bío-Bío',               loc: 'Chile' },
+];
+const eduES = [
+  { year: '2022–24', degree: 'Máster en Inteligencia Artificial', school: 'Universidad de Santiago de Compostela', loc: 'Galicia, España' },
+  { year: '2017–21', degree: 'Ingeniería Industrial',              school: 'Universidad del Bío-Bío',              loc: 'Chile' },
+];
+const bioEN = [
+  "I'm Maximiliano Hormazábal — Max. Born in Chile, now living in Galicia, Spain. I'm a researcher and builder working at the intersection of AI, document understanding, and education.",
+  "Currently pursuing a PhD at the Computer Vision Center (UAB), I work on multimodal systems that navigate and understand complex visual information — PDFs, forms, tables, technical documents. Alongside research, I build real-world AI systems through a document processing startup focused on taking advanced AI into practical use.",
+  "My broader interest lies in how these technologies can reshape the way we learn, teach, and interact with knowledge. I've been teaching since I was 17, and I don't plan to stop.",
+  "This site is a long-running public workspace. Writing here helps me think. It accumulates slowly, and that's intentional.",
+];
+const bioES = [
+  "Soy Maximiliano Hormazábal — Max. Nacido en Chile, ahora viviendo en Galicia, España. Soy investigador y creador trabajando en la intersección de la IA, la comprensión de documentos y la educación.",
+  "Actualmente doctorando en el Centre de Visió per Computador (UAB), trabajo en sistemas multimodales que navegan y comprenden información visual compleja — PDFs, formularios, tablas, documentos técnicos. Junto a la investigación, construyo sistemas de IA aplicados a través de una startup de procesamiento documental.",
+  "Mi interés más amplio radica en cómo estas tecnologías pueden transformar la forma en que aprendemos, enseñamos e interactuamos con el conocimiento. Llevo enseñando desde los 17 años, y no tengo intención de parar.",
+  "Este sitio es un espacio de trabajo público de largo recorrido. Escribir aquí me ayuda a pensar. Se acumula despacio, y eso es intencional.",
+];
+
+function AboutPage({ t, lang }) {
+  const work = lang === 'en' ? workEN : workES;
+  const edu  = lang === 'en' ? eduEN  : eduES;
+  const bio  = lang === 'en' ? bioEN  : bioES;
+
+  return (
+    <div style={{ padding: '64px 64px 80px', maxWidth: 700 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 44, fontWeight: 300, letterSpacing: '-0.025em', color: 'var(--ink)', marginBottom: 36, fontStyle: 'italic' }}>
+        {t.about_heading}
+      </h1>
+
+      <blockquote style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 22, margin: '0 0 44px', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, lineHeight: 1.48, color: 'var(--ink-2)', letterSpacing: '-0.01em' }}>
+        {t.about_quote}
+      </blockquote>
+
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.8, color: 'var(--ink)', marginBottom: 56 }}>
+        {bio.map((p, i) => (
+          <p key={i} style={{ marginBottom: i < bio.length - 1 ? 20 : 0, textWrap: 'pretty' }}>{p}</p>
+        ))}
+      </div>
+
+      <hr style={{ border: 'none', borderTop: '1px solid var(--ink-5)', marginBottom: 40 }} />
+
+      {/* Work */}
+      <section style={{ marginBottom: 40 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 18 }}>
+          {t.work_heading}
+        </div>
+        {work.map((item, i) => (
+          <div key={i} style={{ display: 'flex', gap: 20, padding: '12px 0', borderBottom: i < work.length - 1 ? '1px solid var(--ink-5)' : 'none' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)', width: 72, flexShrink: 0, paddingTop: 2 }}>{item.year}</span>
+            <div>
+              <div>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)' }}>{item.role}</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink-3)' }}> — {item.org}</span>
+              </div>
+              {item.note && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-4)', marginTop: 2 }}>{item.note}</div>}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Education */}
+      <section style={{ marginBottom: 48 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 18 }}>
+          {t.edu_heading}
+        </div>
+        {edu.map((item, i) => (
+          <div key={i} style={{ display: 'flex', gap: 20, padding: '12px 0', borderBottom: i < edu.length - 1 ? '1px solid var(--ink-5)' : 'none' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)', width: 72, flexShrink: 0, paddingTop: 2 }}>{item.year}</span>
+            <div>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)' }}>{item.degree}</span>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink-3)' }}> — {item.school}</span>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Contact */}
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        {[
+          { label: 'info@maxhormazabal.com', href: 'mailto:info@maxhormazabal.com', icon: 'mail' },
+          { label: 'GitHub', href: 'https://github.com/maxhormazabal', icon: 'github' },
+          { label: 'LinkedIn', href: 'https://linkedin.com/in/maximiliano-hormazabal', icon: 'linkedin' },
+        ].map(item => (
+          <a key={item.label} href={item.href} target="_blank" rel="noopener" style={{
+            fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--interactive)',
+            display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none',
+            border: '1px solid var(--ink-5)', borderRadius: 4, padding: '8px 14px',
+            transition: 'background 0.15s, border-color 0.15s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-2)'; e.currentTarget.style.borderColor = 'var(--ink-4)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--ink-5)'; }}
+          >
+            <window.__Icon name={item.icon} size={12} /> {item.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+window.AboutPage = AboutPage;
+
+function SiteFooter({ t }) {
+  return (
+    <footer style={{ marginTop: 'auto', padding: '24px 64px', borderTop: '1px solid var(--ink-5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)' }}>
+        Max Hormazábal · {new Date().getFullYear()}
+      </span>
+      <a href="mailto:info@maxhormazabal.com" style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, transition: 'color 0.15s' }}
+        onMouseEnter={e => e.currentTarget.style.color = 'var(--ink)'}
+        onMouseLeave={e => e.currentTarget.style.color = 'var(--ink-4)'}
+      >
+        <window.__Icon name="mail" size={11} /> info@maxhormazabal.com
+      </a>
+    </footer>
+  );
+}
+window.SiteFooter = SiteFooter;
+</script>
+
+</body>
+</html>
