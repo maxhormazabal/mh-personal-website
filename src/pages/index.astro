@@ -1,17 +1,169 @@
 ---
-
+import MainLayout from '../layouts/MainLayout.astro';
+import Illustration from '../components/Illustration.astro';
+import Icon from '../components/Icon.astro';
+import { T } from '../data/translations';
+import { allPosts, pubs } from '../data/content';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Max Hormazábal">
+  <div style="padding: 64px 64px 80px; maxWidth: 820px; width: 100%;">
+    {/* Hero */}
+    <div style="margin-bottom: 64px;">
+      <div style="margin-bottom: 28px;">
+        <Illustration />
+      </div>
+
+      {/* Tag chips */}
+      <div id="taglines-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;">
+        {/* Chips will be injected by script to handle language */}
+      </div>
+
+      {/* Intro */}
+      <p id="intro-p1" style="font-family: var(--font-body); font-size: 17px; line-height: 1.75; color: var(--ink-2); margin-bottom: 14px; max-width: 520px; text-wrap: pretty;">
+      </p>
+      <p id="intro-p2" style="font-family: var(--font-body); font-size: 17px; line-height: 1.75; color: var(--ink-2); margin-bottom: 32px; max-width: 520px; text-wrap: pretty;">
+      </p>
+
+      {/* CTAs */}
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="/writing" class="cta-primary" style="
+          font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+          padding: 9px 18px; border-radius: 4px;
+          background: var(--ink); color: var(--surface);
+          border: 1px solid var(--ink); cursor: pointer;
+          display: flex; align-items: center; gap: 7px;
+          text-decoration: none;
+          transition: background 0.15s;
+        ">
+          <span id="cta-writing"></span> <Icon name="arrow-right" size={12} />
+        </a>
+        <a href="/about" class="cta-secondary" style="
+          font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+          padding: 9px 18px; border-radius: 4px;
+          background: transparent; color: var(--ink);
+          border: 1px solid var(--ink-4); cursor: pointer;
+          text-decoration: none;
+          transition: background 0.15s, border-color 0.15s;
+        ">
+          <span id="cta-about"></span>
+        </a>
+      </div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--ink-5); margin-bottom: 48px;" />
+
+    {/* Recent writing */}
+    <section style="margin-bottom: 60px;">
+      <div id="recent-writing-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
+      </div>
+      <div id="posts-list">
+        {allPosts.slice(0, 5).map((post, i) => (
+          <div class="post-item" style={`
+            display: flex; align-items: baseline; gap: 20px;
+            padding: 11px 0; width: 100%; text-align: left;
+            border-top: ${i === 0 ? '1px solid var(--ink-5)' : 'none'};
+            border-bottom: 1px solid var(--ink-5);
+          `}>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 68px; flex-shrink: 0;">{post.date}</span>
+            <span class="pt" data-en={post.en} data-es={post.es} style="font-family: var(--font-body); font-size: 16px; color: var(--ink); line-height: 1.4; flex: 1; padding-right: 16px; transition: color 0.15s; text-wrap: pretty;"></span>
+            <span style="font-family: var(--font-mono); font-size: 9px; background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 2px; padding: 2px 6px; color: var(--ink-3); white-space: nowrap;">{post.type}</span>
+          </div>
+        ))}
+      </div>
+      <a href="/writing" id="all-writing-link" style="
+        margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px;
+        color: var(--interactive); background: none; border: none;
+        cursor: pointer; letter-spacing: 0.02em; padding: 0;
+        text-decoration: none; display: inline-block;
+        transition: color 0.15s;
+      ">
+      </a>
+    </section>
+
+    {/* What I work on */}
+    <section>
+      <div id="what-i-work-on-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        {[
+          { icon: 'layers',    en: 'Document AI',     es: 'IA Documental',   den: 'Extracting structure and meaning from PDFs, forms, and tables using layout-aware multimodal models.', des: 'Extraer estructura y significado de PDFs, formularios y tablas con modelos multimodales.' },
+          { icon: 'cpu',       en: 'Multimodal NLP',  es: 'NLP Multimodal',  den: 'Models that reason jointly over text, visual layout, and spatial document structure.',               des: 'Modelos que razonan conjuntamente sobre texto, layout visual y estructura espacial del documento.' },
+          { icon: 'book-open', en: 'Education',       es: 'Educación',       den: 'Teaching data science and AI — clearly, patiently. Since I was 17.',                                  des: 'Enseñando ciencia de datos e IA — con claridad y paciencia. Desde los 17 años.' },
+          { icon: 'code',      en: 'Building',        es: 'Construcción',    den: 'Turning research into products — from experiments to real-world AI systems.',                         des: 'Convertir investigación en productos — de experimentos a sistemas de IA reales.' },
+        ].map((item, i) => (
+          <div key={i} style="background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 4px; padding: 18px;">
+            <div style="color: var(--ink-4); margin-bottom: 10px;"><Icon name={item.icon} size={16} /></div>
+            <div class="work-title" data-en={item.en} data-es={item.es} style="font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--ink); margin-bottom: 7px; line-height: 1.25;">
+            </div>
+            <div class="work-desc" data-en={item.den} data-es={item.des} style="font-family: var(--font-body); font-size: 13px; color: var(--ink-2); line-height: 1.65;">
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</MainLayout>
+
+<style>
+  .cta-primary:hover { background: var(--ink-2) !important; }
+  .cta-secondary:hover { background: var(--surface-2) !important; border-color: var(--ink-3) !important; }
+  .post-item:hover .pt { color: var(--interactive); }
+  #all-writing-link:hover { color: var(--interactive-hover); }
+</style>
+
+<script>
+  import { T } from '../data/translations';
+
+  function updateContent() {
+    const lang = localStorage.getItem('mh-lang') || 'en';
+    const t = T[lang as keyof typeof T];
+
+    // Hero
+    const introP1 = document.getElementById('intro-p1');
+    if (introP1) introP1.textContent = t.intro_p1;
+    const introP2 = document.getElementById('intro-p2');
+    if (introP2) introP2.textContent = t.intro_p2;
+    const ctaWriting = document.getElementById('cta-writing');
+    if (ctaWriting) ctaWriting.textContent = t.cta_writing;
+    const ctaAbout = document.getElementById('cta-about');
+    if (ctaAbout) ctaAbout.textContent = t.cta_about;
+
+    // Taglines
+    const taglinesContainer = document.getElementById('taglines-container');
+    if (taglinesContainer) {
+      const colors = ['var(--interactive)', 'var(--ink-2)', 'var(--accent)', 'var(--ink-3)'];
+      taglinesContainer.innerHTML = t.taglines.map((tag, i) => `
+        <span style="
+          font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
+          background: ${colors[i % colors.length]}; color: var(--surface);
+          border-radius: 3px; padding: 5px 11px; display: inline-block; line-height: 1;
+        ">${tag}</span>
+      `).join('');
+    }
+
+    // Writing
+    const recentWritingHeading = document.getElementById('recent-writing-heading');
+    if (recentWritingHeading) recentWritingHeading.textContent = t.recent_writing;
+    const allWritingLink = document.getElementById('all-writing-link');
+    if (allWritingLink) allWritingLink.textContent = t.all_writing;
+
+    document.querySelectorAll('.pt').forEach(el => {
+      const target = el as HTMLElement;
+      target.textContent = target.getAttribute(`data-${lang}`) || '';
+    });
+
+    // Work items
+    const whatIWorkOnHeading = document.getElementById('what-i-work-on-heading');
+    if (whatIWorkOnHeading) whatIWorkOnHeading.textContent = t.what_i_work_on;
+
+    document.querySelectorAll('.work-title, .work-desc').forEach(el => {
+      const target = el as HTMLElement;
+      target.textContent = target.getAttribute(`data-${lang}`) || '';
+    });
+  }
+
+  updateContent();
+  window.addEventListener('mh-lang-changed', updateContent);
+  document.addEventListener('astro:after-swap', updateContent);
+</script>

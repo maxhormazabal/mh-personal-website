@@ -70,11 +70,58 @@ const { title } = Astro.props;
 
 			applyAccent(getAccent());
 
+			// Editmode protocol
+			window.addEventListener('message', (e) => {
+				if (e.data?.type === '__activate_edit_mode') {
+					document.getElementById('tweaks-panel').style.display = 'block';
+				}
+				if (e.data?.type === '__deactivate_edit_mode') {
+					document.getElementById('tweaks-panel').style.display = 'none';
+				}
+			});
+			window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+			function setTweak(key, val) {
+				if (key === 'accent') {
+					applyAccent(val);
+					window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+					
+					// Update UI checkmarks
+					document.querySelectorAll('.accent-opt').forEach(opt => {
+						opt.style.border = opt.getAttribute('data-id') === val ? '2px solid var(--ink)' : '2px solid var(--surface-3)';
+					});
+				}
+			}
+
 			// Listen for transitions to re-apply theme/accent
 			document.addEventListener('astro:after-swap', () => {
 				setTheme(getTheme());
 				applyAccent(getAccent());
 			});
 		</script>
+
+		{/* Tweaks panel */}
+		<div id="tweaks-panel" style="
+			position: fixed; bottom: 24px; right: 24px; z-index: 400;
+			background: var(--surface); border: 1px solid var(--ink-5);
+			border-radius: 4px; padding: 18px 20px; width: 210px;
+			box-shadow: 0 2px 12px oklch(14% 0.01 250 / 0.1);
+			display: none;
+		">
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+				<span style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);">Tweaks</span>
+				<button onclick="document.getElementById('tweaks-panel').style.display='none'; window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');"
+					style="background: none; border: none; cursor: pointer; color: var(--ink-4); padding: 2px; fontSize: 12px; line-height: 1;">✕</button>
+			</div>
+			<div style="font-family: var(--font-mono); font-size: 9.5px; color: var(--ink-4); margin-bottom: 10px; letter-spacing: 0.04em;">Accent color</div>
+			<div style="display: flex; gap: 8px; margin-bottom: 4px;">
+				<button class="accent-opt" data-id="amber" onclick="setTweak('accent', 'amber')" title="Amber" style="width: 26px; height: 26px; border-radius: 50%; background: oklch(58% 0.14 55); cursor: pointer; outline: none; transition: border-color 0.15s; border: 2px solid var(--surface-3);"></button>
+				<button class="accent-opt" data-id="slate" onclick="setTweak('accent', 'slate')" title="Slate" style="width: 26px; height: 26px; border-radius: 50%; background: oklch(55% 0.10 255); cursor: pointer; outline: none; transition: border-color 0.15s; border: 2px solid var(--surface-3);"></button>
+				<button class="accent-opt" data-id="forest" onclick="setTweak('accent', 'forest')" title="Forest" style="width: 26px; height: 26px; border-radius: 50%; background: oklch(50% 0.11 150); cursor: pointer; outline: none; transition: border-color 0.15s; border: 2px solid var(--surface-3);"></button>
+			</div>
+			<div id="accent-desc" style="font-family: var(--font-mono); font-size: 9px; color: var(--ink-5); margin-top: 8px;">
+				Warm amber — default
+			</div>
+		</div>
 	</body>
 </html>

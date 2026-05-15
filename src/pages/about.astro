@@ -1,0 +1,118 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<MainLayout title="About | Max Hormazábal">
+  <div style="padding: 64px 64px 80px; max-width: 700px;">
+    <h1 id="about-heading" style="font-family: var(--font-display); font-size: 44px; font-weight: 300; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 36px; font-style: italic;">
+    </h1>
+
+    <blockquote id="about-quote" style="border-left: 2px solid var(--accent); padding-left: 22px; margin: 0 0 44px; font-family: var(--font-display); font-style: italic; font-size: 22px; line-height: 1.48; color: var(--ink-2); letter-spacing: -0.01em;">
+    </blockquote>
+
+    <div id="bio-container" style="font-family: var(--font-body); font-size: 17px; line-height: 1.8; color: var(--ink); margin-bottom: 56px;">
+      {/* Paragraphs injected by JS */}
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--ink-5); margin-bottom: 40px;" />
+
+    {/* Work */}
+    <section style="margin-bottom: 40px;">
+      <div id="work-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px;">
+      </div>
+      <div id="work-container"></div>
+    </section>
+
+    {/* Education */}
+    <section style="margin-bottom: 48px;">
+      <div id="edu-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px;">
+      </div>
+      <div id="edu-container"></div>
+    </section>
+
+    {/* Contact */}
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      {[
+        { label: 'info@maxhormazabal.com', href: 'mailto:info@maxhormazabal.com', icon: 'mail' },
+        { label: 'GitHub', href: 'https://github.com/maxhormazabal', icon: 'github' },
+        { label: 'LinkedIn', href: 'https://linkedin.com/in/maximiliano-hormazabal', icon: 'linkedin' },
+      ].map(item => (
+        <a href={item.href} target="_blank" rel="noopener" class="contact-pill" style="
+          font-family: var(--font-mono); font-size: 12px; color: var(--interactive);
+          display: flex; align-items: center; gap: 6px; text-decoration: none;
+          border: 1px solid var(--ink-5); border-radius: 4px; padding: 8px 14px;
+          transition: background 0.15s, border-color 0.15s;
+        ">
+          <Icon name={item.icon} size={12} /> {item.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .contact-pill:hover { background: var(--surface-2); border-color: var(--ink-4); }
+</style>
+
+<script>
+  import { T } from '../data/translations';
+  import { work, edu, bio } from '../data/content';
+
+  function updateContent() {
+    const lang = localStorage.getItem('mh-lang') || 'en';
+    const t = T[lang as keyof typeof T];
+
+    const heading = document.getElementById('about-heading');
+    if (heading) heading.textContent = t.about_heading;
+    const quote = document.getElementById('about-quote');
+    if (quote) quote.textContent = t.about_quote;
+    const workHeading = document.getElementById('work-heading');
+    if (workHeading) workHeading.textContent = t.work_heading;
+    const eduHeading = document.getElementById('edu-heading');
+    if (eduHeading) eduHeading.textContent = t.edu_heading;
+
+    const bioContainer = document.getElementById('bio-container');
+    if (bioContainer) {
+      const paragraphs = bio[lang as keyof typeof bio];
+      bioContainer.innerHTML = paragraphs.map((p, i) => `
+        <p style="margin-bottom: ${i < paragraphs.length - 1 ? '20px' : '0'}; text-wrap: pretty;">${p}</p>
+      `).join('');
+    }
+
+    const workContainer = document.getElementById('work-container');
+    if (workContainer) {
+      const list = work[lang as keyof typeof work];
+      workContainer.innerHTML = list.map((item, i) => `
+        <div style="display: flex; gap: 20px; padding: 12px 0; border-bottom: ${i < list.length - 1 ? '1px solid var(--ink-5)' : 'none'};">
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 72px; flex-shrink: 0; padding-top: 2px;">${item.year}</span>
+          <div>
+            <div>
+              <span style="font-family: var(--font-body); font-size: 15px; color: var(--ink);">${item.role}</span>
+              <span style="font-family: var(--font-body); font-size: 15px; color: var(--ink-3);"> — ${item.org}</span>
+            </div>
+            ${item.note ? `<div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); margin-top: 2px;">${item.note}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    const eduContainer = document.getElementById('edu-container');
+    if (eduContainer) {
+      const list = edu[lang as keyof typeof edu];
+      eduContainer.innerHTML = list.map((item, i) => `
+        <div style="display: flex; gap: 20px; padding: 12px 0; border-bottom: ${i < list.length - 1 ? '1px solid var(--ink-5)' : 'none'};">
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 72px; flex-shrink: 0; padding-top: 2px;">${item.year}</span>
+          <div>
+            <span style="font-family: var(--font-body); font-size: 15px; color: var(--ink);">${item.degree}</span>
+            <span style="font-family: var(--font-body); font-size: 15px; color: var(--ink-3);"> — ${item.school}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  updateContent();
+  window.addEventListener('mh-lang-changed', updateContent);
+  document.addEventListener('astro:after-swap', updateContent);
+</script>

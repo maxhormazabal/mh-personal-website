@@ -1,0 +1,110 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { allPosts } from '../data/content';
+---
+
+<MainLayout title="Writing | Max Hormazábal">
+  <div style="padding: 64px 64px 80px; max-width: 760px;">
+    <h1 id="writing-heading" style="font-family: var(--font-display); font-size: 44px; font-weight: 300; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 10px; font-style: italic;">
+    </h1>
+    <p id="writing-sub" style="font-family: var(--font-body); font-size: 16px; color: var(--ink-2); line-height: 1.65; margin-bottom: 36px; max-width: 440px;">
+    </p>
+
+    {/* Filter tabs */}
+    <div style="display: flex; border-bottom: 1px solid var(--ink-5); margin-bottom: 32px;">
+      {['all', 'essay', 'note'].map(f => (
+        <button class="filter-tab" data-filter={f} style="
+          font-family: var(--font-mono); font-size: 12px;
+          background: none; border: none;
+          margin-bottom: -1px; padding: 8px 16px 8px 0; cursor: pointer;
+          letter-spacing: 0.02em; transition: color 0.15s;
+        ">{f}</button>
+      ))}
+    </div>
+
+    <div id="posts-list">
+      {allPosts.map((post, i) => (
+        <div class="post-item-full" data-type={post.type} style={`
+          display: flex; align-items: flex-start; gap: 20px; padding: 14px 0;
+          width: 100%; text-align: left;
+          border-bottom: 1px solid var(--ink-5);
+        `}>
+          <div style="padding-top: 1px; width: 70px; flex-shrink: 0;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); display: block; margin-bottom: 2px;">{post.date}</span>
+            <span style="font-family: var(--font-mono); font-size: 9px; color: var(--ink-5);">{post.mins} min</span>
+          </div>
+          <div>
+            <div class="wt-full" data-en={post.en} data-es={post.es} style="font-family: var(--font-body); font-size: 17px; color: var(--ink); line-height: 1.4; margin-bottom: 7px; transition: color 0.15s; text-wrap: pretty;"></div>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+              <span style="font-family: var(--font-mono); font-size: 9px; background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 2px; padding: 2px 6px; color: var(--ink-3);">{post.type}</span>
+              {post.tags.map(tag => (
+                <span style="font-family: var(--font-mono); font-size: 9px; background: transparent; border: 1px solid var(--ink-5); border-radius: 2px; padding: 2px 6px; color: var(--ink-4);">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .filter-tab {
+    color: var(--ink-3);
+    border-bottom: 2px solid transparent !important;
+  }
+  .filter-tab.active {
+    color: var(--ink);
+    border-bottom: 2px solid var(--ink) !important;
+  }
+  .post-item-full:hover .wt-full { color: var(--interactive); }
+</style>
+
+<script>
+  import { T } from '../data/translations';
+
+  let currentFilter = 'all';
+
+  function updateContent() {
+    const lang = localStorage.getItem('mh-lang') || 'en';
+    const t = T[lang as keyof typeof T];
+
+    const heading = document.getElementById('writing-heading');
+    if (heading) heading.textContent = t.writing_heading;
+    const sub = document.getElementById('writing-sub');
+    if (sub) sub.textContent = t.writing_sub;
+
+    document.querySelectorAll('.wt-full').forEach(el => {
+      const target = el as HTMLElement;
+      target.textContent = target.getAttribute(`data-${lang}`) || '';
+    });
+
+    filterPosts();
+  }
+
+  function filterPosts() {
+    document.querySelectorAll('.filter-tab').forEach(el => {
+      const f = el.getAttribute('data-filter');
+      el.classList.toggle('active', f === currentFilter);
+    });
+
+    document.querySelectorAll('.post-item-full').forEach(el => {
+      const target = el as HTMLElement;
+      const type = target.getAttribute('data-type');
+      const visible = currentFilter === 'all' || type === currentFilter;
+      target.style.display = visible ? 'flex' : 'none';
+    });
+  }
+
+  // Tabs events
+  document.querySelectorAll('.filter-tab').forEach(el => {
+    el.addEventListener('click', () => {
+      currentFilter = el.getAttribute('data-filter') || 'all';
+      filterPosts();
+    });
+  });
+
+  updateContent();
+  window.addEventListener('mh-lang-changed', updateContent);
+  document.addEventListener('astro:after-swap', updateContent);
+</script>

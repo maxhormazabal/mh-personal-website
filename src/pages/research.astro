@@ -1,0 +1,93 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Icon from '../components/Icon.astro';
+import { pubs } from '../data/content';
+---
+
+<MainLayout title="Research | Max Hormazábal">
+  <div style="padding: 64px 64px 80px; max-width: 760px;">
+    <h1 id="research-heading" style="font-family: var(--font-display); font-size: 44px; font-weight: 300; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 10px; font-style: italic;">
+    </h1>
+    <p id="research-sub" style="font-family: var(--font-body); font-size: 16px; color: var(--ink-2); line-height: 1.65; margin-bottom: 10px; max-width: 480px;">
+    </p>
+    <a href="https://scholar.google.com/citations?user=jOUDgfEAAAAJ&hl=es" target="_blank" rel="noopener" class="scholar-link" style="
+      font-family: var(--font-mono); font-size: 11.5px; color: var(--interactive);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+      margin-bottom: 48px; transition: color 0.15s;
+    ">
+      <span id="scholar-text"></span> <Icon name="external-link" size={11} />
+    </a>
+
+    <div id="pubs-list">
+      {pubs.map((pub, i) => (
+        <div style={`padding: 26px 0; border-bottom: ${i < pubs.length - 1 ? '1px solid var(--ink-5)' : 'none'};`}>
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
+            <span class="pub-type" data-type={pub.type} style="font-family: var(--font-mono); font-size: 9px; border-radius: 2px; padding: 2px 7px; color: var(--surface);">
+            </span>
+            <span style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3);">{pub.venue}</span>
+            <span style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-5);">{pub.year}</span>
+          </div>
+          <div class="pub-title" data-en={pub.en} data-es={pub.es} style="font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.3; letter-spacing: -0.01em;">
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); margin-bottom: 12px;">{pub.authors}</div>
+          <p class="pub-abstract" data-en={pub.aen} data-es={pub.aes} style="font-family: var(--font-body); font-size: 14px; color: var(--ink-2); line-height: 1.72; margin-bottom: 12px; max-width: 580px;">
+          </p>
+          <a href="https://scholar.google.com/citations?user=jOUDgfEAAAAJ&hl=es" target="_blank" rel="noopener" class="scholar-link-small" style="
+            font-family: var(--font-mono); font-size: 10.5px; color: var(--interactive);
+            text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+            transition: color 0.15s;
+          ">
+            Google Scholar <Icon name="external-link" size={10} />
+          </a>
+        </div>
+      ))}
+    </div>
+
+    <div id="note-placeholder" style="margin-top: 40px; padding: 14px 18px; background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 4px; font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3); line-height: 1.65;">
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .scholar-link:hover, .scholar-link-small:hover { color: var(--interactive-hover) !important; }
+</style>
+
+<script>
+  import { T } from '../data/translations';
+
+  function updateContent() {
+    const lang = localStorage.getItem('mh-lang') || 'en';
+    const t = T[lang as keyof typeof T];
+
+    const heading = document.getElementById('research-heading');
+    if (heading) heading.textContent = t.research_heading;
+    const sub = document.getElementById('research-sub');
+    if (sub) sub.textContent = t.research_sub;
+    const scholarText = document.getElementById('scholar-text');
+    if (scholarText) scholarText.textContent = t.scholar_link;
+    const notePlaceholder = document.getElementById('note-placeholder');
+    if (notePlaceholder) notePlaceholder.textContent = t.note_placeholder;
+
+    const typeBg: Record<string, string> = { conference: 'var(--interactive)', workshop: 'var(--accent)', preprint: 'var(--ink-3)' };
+
+    document.querySelectorAll('.pub-type').forEach(el => {
+      const target = el as HTMLElement;
+      const type = target.getAttribute('data-type') || '';
+      target.style.background = typeBg[type] || 'var(--ink-3)';
+      if (lang === 'es') {
+        target.textContent = type === 'conference' ? 'conferencia' : type === 'workshop' ? 'taller' : 'preprint';
+      } else {
+        target.textContent = type;
+      }
+    });
+
+    document.querySelectorAll('.pub-title, .pub-abstract').forEach(el => {
+      const target = el as HTMLElement;
+      target.textContent = target.getAttribute(`data-${lang}`) || '';
+    });
+  }
+
+  updateContent();
+  window.addEventListener('mh-lang-changed', updateContent);
+  document.addEventListener('astro:after-swap', updateContent);
+</script>
