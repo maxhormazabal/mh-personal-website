@@ -18,7 +18,7 @@
   --font-display: 'Newsreader', Georgia, serif;
   --font-body:    'Source Serif 4', Georgia, serif;
   --font-mono:    'JetBrains Mono', monospace;
-  --sidebar-w: 248px;
+  --sidebar-w: 264px;
 }
 
 [data-theme="dark"] {
@@ -42,7 +42,8 @@ body {
   font-family: var(--font-body);
   background: var(--surface);
   color: var(--ink);
-  -webkit-font-smoothing: antialiased;
+  font-size: 17px;
+  line-height: 1.6;
   transition: background 0.2s, color 0.2s;
 }
 
