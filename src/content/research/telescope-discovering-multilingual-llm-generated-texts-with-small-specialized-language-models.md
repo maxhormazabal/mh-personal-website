@@ -2,11 +2,11 @@
 year: "2024"
 type: "workshop"
 venue: "SEPLN 2024"
-url: "https://ceur-ws.org/Vol-3756/IberAuTexTification2024\\_paper5.pdf"
+url: "https://ceur-ws.org/Vol-3756/IberAuTexTification2024_paper5.pdf"
 en: "Telescope: Discovering Multilingual LLM Generated Texts with Small Specialized Language Models"
 es: "Telescope: Discovering Multilingual LLM Generated Texts with Small Specialized Language Models"
-authors: "Hormazábal M., et al."
+authors: "H. Cerezo-Costas, P. Alonso-Doval1, M. Hormazábal-Lagos & A. Creo"
 raw_contributors: null
-aen: "Resumen en inglés obtenido de ORCID..."
-aes: "Resumen en español (añadir manualmente)..."
+aen: "This paper introduces Telescope , a Machine-Generated Text (MGT) detection system developed for the Iber-AuTexTification challenge at IberLEF 2024. Our approach is an adaptation of Binoculars, a technique which involves the change ratio of perplexity and cross-perplexity using two closely related language models to quantify the level of surprise in word selection in the generation of a sentence for identifying MGT. This is supported by an iterative threshold selection process that balances false positives and false negatives. Enhancements include fine-tuning of pretrained linguistic models to improve performance in the minority languages present in the Iberian Peninsula. This approach obtained the best performance measured in a random split of the training used for testing in all the Iberian languages. Results extrapolate to other contexts and generation profiles, with our models finishing third of all participants in the final contest. Telescope demonstrated its robustness and efficacy across diverse linguistic contexts, with significant improvements in MGT detection over Iberian languages. These results highlight the potential of Telescope for enhancing content moderation strategies."
+aes: "This paper introduces Telescope , a Machine-Generated Text (MGT) detection system developed for the Iber-AuTexTification challenge at IberLEF 2024. Our approach is an adaptation of Binoculars, a technique which involves the change ratio of perplexity and cross-perplexity using two closely related language models to quantify the level of surprise in word selection in the generation of a sentence for identifying MGT. This is supported by an iterative threshold selection process that balances false positives and false negatives. Enhancements include fine-tuning of pretrained linguistic models to improve performance in the minority languages present in the Iberian Peninsula. This approach obtained the best performance measured in a random split of the training used for testing in all the Iberian languages. Results extrapolate to other contexts and generation profiles, with our models finishing third of all participants in the final contest. Telescope demonstrated its robustness and efficacy across diverse linguistic contexts, with significant improvements in MGT detection over Iberian languages. These results highlight the potential of Telescope for enhancing content moderation strategies."
 ---

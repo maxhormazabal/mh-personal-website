@@ -39,7 +39,7 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
               </a>
             )}
           </div>
-          <p class="pub-abstract" data-en={pub.aen} data-es={pub.aes} style="font-family: var(--font-body); font-size: 14px; color: var(--ink-2); line-height: 1.72; margin-bottom: 12px; max-width: 580px;">
+          <p class="pub-abstract" data-en={pub.aen.length > 300 ? pub.aen.slice(0, 300) + '...' : pub.aen} data-es={pub.aes.length > 300 ? pub.aes.slice(0, 300) + '...' : pub.aes} style="font-family: var(--font-body); font-size: 14px; color: var(--ink-2); line-height: 1.72; margin-bottom: 12px; max-width: 580px;">
           </p>
         </div>
       ))}
