@@ -122,6 +122,7 @@ url: ${JSON.stringify(paperUrl)}
 en: ${JSON.stringify(title.replace(/\s+/g, ' '))}
 es: ${JSON.stringify(title.replace(/\s+/g, ' '))}
 authors: ${JSON.stringify(authors)}
+raw_contributors: ${JSON.stringify(summary['contributors'] || null)}
 aen: "Resumen en inglés obtenido de ORCID..."
 aes: "Resumen en español (añadir manualmente)..."
 ---
