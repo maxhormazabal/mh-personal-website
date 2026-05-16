@@ -19,6 +19,7 @@
   --font-body:    'Source Serif 4', Georgia, serif;
   --font-mono:    'JetBrains Mono', monospace;
   --sidebar-w: 264px;
+  --header-h: 64px;
 }
 
 [data-theme="dark"] {
@@ -50,3 +51,11 @@ body {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--ink-5); border-radius: 3px; }
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .hide-on-mobile { display: none !important; }
+}
+@media (min-width: 769px) {
+  .show-on-mobile { display: none !important; }
+}

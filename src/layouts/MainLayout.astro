@@ -27,9 +27,9 @@ const { title } = Astro.props;
 		<ViewTransitions />
 	</head>
 	<body>
-		<div style="display: flex; min-height: 100vh;">
+		<div class="layout-wrapper">
 			<Sidebar />
-			<main style="margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; display: flex; flex-direction: column;">
+			<main class="main-content">
 				<slot />
 				<SiteFooter />
 			</main>
@@ -126,5 +126,29 @@ const { title } = Astro.props;
 				Warm amber — default
 			</div>
 		</div>
+
+<style>
+  .layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+  }
+  .main-content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (max-width: 768px) {
+    .layout-wrapper {
+      flex-direction: column;
+    }
+    .main-content {
+      margin-left: 0;
+      margin-top: var(--header-h);
+    }
+  }
+</style>
 	</body>
 </html>
