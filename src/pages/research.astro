@@ -31,18 +31,16 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
           </div>
           <div class="pub-title" data-en={pub.en} data-es={pub.es} style="font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.3; letter-spacing: -0.01em;">
           </div>
-          <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); margin-bottom: 12px;">{pub.authors}</div>
+          <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            <span>{pub.authors}</span>
+            {pub.url && (
+              <a href={pub.url} target="_blank" rel="noopener" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center;" class="paper-link-icon">
+                <Icon name="external-link" size={11} />
+              </a>
+            )}
+          </div>
           <p class="pub-abstract" data-en={pub.aen} data-es={pub.aes} style="font-family: var(--font-body); font-size: 14px; color: var(--ink-2); line-height: 1.72; margin-bottom: 12px; max-width: 580px;">
           </p>
-          {pub.url && (
-            <a href={pub.url} target="_blank" rel="noopener" class="scholar-link-small" style="
-              font-family: var(--font-mono); font-size: 10.5px; color: var(--interactive);
-              text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
-              transition: color 0.15s;
-            ">
-              <Icon name="external-link" size={12} />
-            </a>
-          )}
         </div>
       ))}
     </div>
@@ -53,7 +51,8 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
 </MainLayout>
 
 <style>
-  .scholar-link:hover, .scholar-link-small:hover { color: var(--interactive-hover) !important; }
+  .scholar-link:hover { color: var(--interactive-hover) !important; }
+  .paper-link-icon:hover { color: var(--interactive) !important; }
 </style>
 
 <script>

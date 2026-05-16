@@ -1,7 +1,7 @@
 ---
 year: "2026"
-type: "preprint"
-venue: "ORCID"
+type: "conference"
+venue: "EPIA 2025"
 url: "https://doi.org/10.1007/978-3-032-05179-0_26"
 en: "ExpliCIT-QA: Explainable Code-Based Image Table Question Answering"
 es: "ExpliCIT-QA: Explainable Code-Based Image Table Question Answering"

@@ -1,8 +1,8 @@
 ---
 year: "2025"
-type: "preprint"
-venue: "arXiv"
-url: "https://arxiv.org/abs/2505.22264"
+type: "workshop"
+venue: "SemEval"
+url: "https://aclanthology.org/2025.semeval-1.68/"
 en: "MRT at SemEval-2025 Task 8: Maximizing Recovery from Tables with Multiple Steps"
 es: "MRT at SemEval-2025 Task 8: Maximizing Recovery from Tables with Multiple Steps"
 authors: "Hormazábal M., et al."
