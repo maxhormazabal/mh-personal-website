@@ -24,8 +24,8 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
       padding: 0; margin-bottom: 14px; display: block;
       transition: opacity 0.15s;
     " class="logo-btn">
-      <img src="/logo_light.svg" class="logo-light" alt="Logo" width="44" height="44" />
-      <img src="/logo_dark.svg" class="logo-dark" alt="Logo" width="44" height="44" />
+      <img src="/logo_light.svg" class="logo-light" alt="Logo" width="56" height="56" />
+      <img src="/logo_dark.svg" class="logo-dark" alt="Logo" width="56" height="56" />
     </a>
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
       <a href="/" style="
@@ -137,10 +137,10 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
   :global([data-theme="dark"]) .logo-dark { display: block; }
 
   /* Theme icon visibility */
-  :global([data-theme="dark"]) .theme-icon-sun { display: block; }
-  :global([data-theme="dark"]) .theme-icon-moon { display: none; }
-  :global(:not([data-theme="dark"])) .theme-icon-sun { display: none; }
-  :global(:not([data-theme="dark"])) .theme-icon-moon { display: block; }
+  :global([data-theme="dark"]) .theme-icon-sun { display: none; }
+  :global([data-theme="dark"]) .theme-icon-moon { display: block; }
+  :global(:not([data-theme="dark"])) .theme-icon-sun { display: block; }
+  :global(:not([data-theme="dark"])) .theme-icon-moon { display: none; }
 </style>
 
 <script>
