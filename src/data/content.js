@@ -8,32 +8,7 @@ export const allPosts = [
   { date: 'May 2025', en: 'Reading notes: LayoutLM and its successors',           es: 'Notas de lectura: LayoutLM y sus sucesores',              type: 'note',  tags: ['document-ai','paper-notes'], mins: 5  },
 ];
 
-export const pubs = [
-  {
-    year: '2025', type: 'conference', venue: 'ICDAR 2025',
-    en: 'Multimodal Document Understanding with Layout-Aware Transformer Models',
-    es: 'Comprensión Multimodal de Documentos con Modelos Transformer con Conciencia de Layout',
-    authors: 'Hormazábal M., et al.',
-    aen: 'We present an approach to document understanding that integrates spatial layout information with textual content through a multimodal transformer architecture, achieving strong results on document parsing benchmarks.',
-    aes: 'Presentamos un enfoque para la comprensión de documentos que integra información de layout espacial con contenido textual mediante una arquitectura transformer multimodal.',
-  },
-  {
-    year: '2024', type: 'workshop', venue: 'Document Analysis Workshop, 2024',
-    en: 'Visual Information Extraction from Complex Document Layouts',
-    es: 'Extracción de Información Visual en Documentos con Layouts Complejos',
-    authors: 'Hormazábal M., et al.',
-    aen: 'An investigation into methods for extracting structured information from documents with complex visual layouts — tables, forms, and mixed-content pages — using vision-language models.',
-    aes: 'Una investigación sobre métodos para extraer información estructurada de documentos con layouts visuales complejos, incluyendo tablas, formularios y páginas con contenido mixto.',
-  },
-  {
-    year: '2024', type: 'preprint', venue: 'arXiv preprint',
-    en: 'Towards Explainable Document AI: Interpretability in Layout Understanding',
-    es: 'Hacia una IA Documental Explicable: Interpretabilidad en la Comprensión de Layout',
-    authors: 'Hormazábal M., et al.',
-    aen: 'This work examines the interpretability of document understanding models, proposing methods to make spatial reasoning more transparent and traceable.',
-    aes: 'Este trabajo examina la interpretabilidad de los modelos de comprensión de documentos, proponiendo métodos para hacer el razonamiento espacial más transparente y trazable.',
-  },
-];
+
 
 export const courses = {
   en: [

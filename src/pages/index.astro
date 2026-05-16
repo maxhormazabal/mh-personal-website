@@ -3,7 +3,10 @@ import MainLayout from '../layouts/MainLayout.astro';
 import HeroScene from '../components/HeroScene.astro';
 import Icon from '../components/Icon.astro';
 import { T } from '../data/translations';
-import { allPosts, pubs } from '../data/content';
+import { allPosts } from '../data/content';
+import { getCollection } from 'astro:content';
+
+const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b.year.localeCompare(a.year));
 ---
 
 <MainLayout title="Max Hormazábal">

@@ -1,7 +1,9 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import Icon from '../components/Icon.astro';
-import { pubs } from '../data/content';
+import { getCollection } from 'astro:content';
+
+const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b.year.localeCompare(a.year));
 ---
 
 <MainLayout title="Research | Max Hormazábal">
