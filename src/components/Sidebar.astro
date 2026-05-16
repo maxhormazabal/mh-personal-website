@@ -127,7 +127,7 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
     color: var(--ink-2);
     background: var(--surface-2);
   }
-  .logo-btn { margin-left: -15px; }
+  .logo-btn { margin-left: -10px; }
   .logo-btn:hover { opacity: 0.7; }
   .connect-link:hover { color: var(--ink); }
 
@@ -138,10 +138,10 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
   :global([data-theme="dark"]) .logo-dark { display: block; }
 
   /* Theme icon visibility */
-  :global([data-theme="dark"] .theme-icon-sun) { display: none; }
-  :global([data-theme="dark"] .theme-icon-moon) { display: block; }
-  :global(:not([data-theme="dark"]) .theme-icon-sun) { display: block; }
-  :global(:not([data-theme="dark"]) .theme-icon-moon) { display: none; }
+  :global([data-theme="dark"] .theme-icon-sun) { display: block; }
+  :global([data-theme="dark"] .theme-icon-moon) { display: none; }
+  :global(:not([data-theme="dark"]) .theme-icon-sun) { display: none; }
+  :global(:not([data-theme="dark"]) .theme-icon-moon) { display: block; }
 </style>
 
 <script>
