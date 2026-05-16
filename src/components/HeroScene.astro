@@ -270,10 +270,13 @@ function setupInteraction(elements: SceneElement[], outer: HTMLElement) {
    Responsive scaling
 ───────────────────────────────────────────────── */
 function setupScaling(outer: HTMLElement, scenEl: HTMLElement) {
+  const PADDING = 20; // Margen hacia adentro
   function update() {
-    const scale = outer.clientWidth / SCENE_W;
+    const scale = (outer.clientWidth - PADDING * 2) / SCENE_W;
     scenEl.style.transform = `scale(${scale})`;
-    outer.style.height     = `${Math.round(SCENE_H * scale)}px`;
+    scenEl.style.left = `${PADDING}px`;
+    scenEl.style.top = `${PADDING}px`;
+    outer.style.height     = `${Math.round(SCENE_H * scale) + PADDING * 2}px`;
   }
   const ro = new ResizeObserver(update);
   ro.observe(outer);
