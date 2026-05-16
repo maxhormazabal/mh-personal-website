@@ -81,7 +81,7 @@ const variant  = Math.random() < 0.5 ? 'A' : 'B';
 /* ─────────────────────────────────────────────────
    Filter elements based on variant
 ───────────────────────────────────────────────── */
-const sceneDefs = rawDefs.filter(d => !d.variant || d.variant === variant);
+const sceneDefs = rawDefs.filter(d => d.id && (!d.variant || d.variant === variant));
 
 /* ─────────────────────────────────────────────────
    Compute layout from content target
