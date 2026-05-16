@@ -2,6 +2,7 @@
 year: "2024"
 type: "preprint"
 venue: "Proceedings of the Iberian Languages Evaluation Forum (IberLEF 2024) co-located with the Conference of the Spanish Society for Natural Language Processing (SEPLN 2024), Valladolid, Spain, September 24, 2024"
+url: "https://ceur-ws.org/Vol-3756/IberAuTexTification2024\\_paper5.pdf"
 en: "Telescope: Discovering Multilingual LLM Generated Texts with Small Specialized Language Models"
 es: "Telescope: Discovering Multilingual LLM Generated Texts with Small Specialized Language Models"
 authors: "Hormazábal M., et al."

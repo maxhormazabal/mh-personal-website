@@ -87,6 +87,14 @@ async function main() {
       const type = summary.type || 'other';
       const venue = summary['journal-title']?.value || 'ORCID';
       
+      // Intentar obtener URL o DOI
+      const url = summary.url?.value || '';
+      const externalIds = summary['external-ids']?.['external-id'] || [];
+      const doiObj = externalIds.find(id => id['external-id-type'] === 'doi');
+      const doiUrl = doiObj?.['external-id-url']?.value;
+      const doiValue = doiObj?.['external-id-value'];
+      const paperUrl = url || doiUrl || (doiValue ? `https://doi.org/${doiValue}` : '');
+
       // Intentar obtener autores
       const contributors = summary['contributors']?.contributor || [];
       const authorsList = contributors
@@ -110,6 +118,7 @@ async function main() {
 year: ${JSON.stringify(year)}
 type: ${JSON.stringify(mappedType)}
 venue: ${JSON.stringify(venue.replace(/\s+/g, ' '))}
+url: ${JSON.stringify(paperUrl)}
 en: ${JSON.stringify(title.replace(/\s+/g, ' '))}
 es: ${JSON.stringify(title.replace(/\s+/g, ' '))}
 authors: ${JSON.stringify(authors)}
