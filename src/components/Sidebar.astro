@@ -24,15 +24,8 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
       padding: 0; margin-bottom: 14px; display: block;
       transition: opacity 0.15s;
     " class="logo-btn">
-      <svg width="44" height="44" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="28" y1="28" x2="28" y2="128" stroke="var(--ink)" stroke-width="2" stroke-linecap="square"/>
-        <line x1="28" y1="28" x2="112" y2="28" stroke="var(--ink)" stroke-width="2" stroke-linecap="square"/>
-        <line x1="28" y1="128" x2="100" y2="128" stroke="var(--ink)" stroke-width="2" stroke-linecap="square"/>
-        <circle cx="132" cy="26" r="6" fill="#c47a35"/>
-        <line x1="132" y1="38" x2="132" y2="82" stroke="#c47a35" stroke-width="2" stroke-linecap="round"/>
-        <polygon points="106,148 148,148 148,104" fill="none" stroke="#c47a35" stroke-width="2.5" stroke-linejoin="round"/>
-        <text x="72" y="94" font-family="Newsreader, Georgia, serif" font-size="52" font-weight="500" text-anchor="middle" fill="var(--ink)" letter-spacing="-1">MH</text>
-      </svg>
+      <img src="/logo_light.svg" class="logo-light" alt="Logo" width="44" height="44" />
+      <img src="/logo_dark.svg" class="logo-dark" alt="Logo" width="44" height="44" />
     </a>
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
       <a href="/" style="
@@ -136,6 +129,12 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
   }
   .logo-btn:hover { opacity: 0.7; }
   .connect-link:hover { color: var(--ink); }
+
+  .logo-light { display: block; }
+  .logo-dark { display: none; }
+
+  :global([data-theme="dark"]) .logo-light { display: none; }
+  :global([data-theme="dark"]) .logo-dark { display: block; }
 
   /* Theme icon visibility */
   :global([data-theme="dark"]) .theme-icon-sun { display: block; }
