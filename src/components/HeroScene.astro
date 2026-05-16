@@ -18,7 +18,6 @@
     width: 1600px;
     height: 640px;
     transform-origin: top left;
-    background: linear-gradient(175deg, #f7f1e3 0%, #f4ecd9 55%, #ede5cc 100%);
     overflow: visible;
   }
 
@@ -69,6 +68,8 @@
 </style>
 
 <script>
+import rawDefs from '../data/hero-config.json';
+
 /* ─────────────────────────────────────────────────
    Config
 ───────────────────────────────────────────────── */
@@ -78,84 +79,9 @@ const HIT_SCALE = 0.25; // offscreen canvas scale (memory efficiency)
 const variant  = Math.random() < 0.5 ? 'A' : 'B';
 
 /* ─────────────────────────────────────────────────
-   Element definitions
-   tx/ty  → desired scene position of content's top-left corner
-   tvw    → desired visible width of element in scene pixels
-   cx1..cy2 → content bounding box in image space (from alpha scan)
-   iw/ih  → image natural size
+   Filter elements based on variant
 ───────────────────────────────────────────────── */
-const rawDefs = [
-  // ── Background wall ──────────────────────────────────────────────
-  { id: 'board',
-    src1: '/hero-scene/board_1.png', src2: null,
-    iw: 1536, ih: 1024, cx1: 36,  cy1: 89,  cx2: 1499, cy2: 873,
-    tx: 5,    ty: 5,   tvw: 510, z: 2 },
-
-  { id: 'painting',
-    src1: '/hero-scene/painting_1.png', src2: '/hero-scene/painting_2.png',
-    iw: 1536, ih: 1024, cx1: 0,   cy1: 0,   cx2: 1535, cy2: 1023,
-    tx: 935,  ty: 5,   tvw: 665, z: 3 },
-
-  // ── Human (random scene variant) ─────────────────────────────────
-  ...(variant === 'A' ? [{
-    id: 'human',
-    src1: '/hero-scene/human_1A.png', src2: '/hero-scene/human_2A.png',
-    iw: 1536, ih: 1024, cx1: 297, cy1: 44,  cx2: 1199, cy2: 948,
-    tx: 390,  ty: 0,   tvw: 695, z: 4
-  }] : [{
-    id: 'human',
-    src1: '/hero-scene/human_1B.png', src2: '/hero-scene/human_2B.png',
-    iw: 1536, ih: 1024, cx1: 249, cy1: 32,  cx2: 1316, cy2: 1023,
-    tx: 375,  ty: 0,   tvw: 700, z: 4
-  }]),
-
-  // ── Table surface (static — no hover) ────────────────────────────
-  { id: 'table', isStatic: true, coverMode: true,
-    src1: '/hero-scene/table.png', src2: null,
-    left: -55, top: 468, width: 1710, height: 230, z: 15 },
-
-  // ── Desk objects ─────────────────────────────────────────────────
-  { id: 'books',
-    src1: '/hero-scene/books_1.png', src2: '/hero-scene/books_2.png',
-    iw: 1536, ih: 1024, cx1: 367, cy1: 191, cx2: 1154, cy2: 821,
-    tx: 10,   ty: 322, tvw: 278, z: 16 },
-
-  { id: 'cat',
-    src1: '/hero-scene/cat_1.png', src2: '/hero-scene/cat_2.png',
-    iw: 1536, ih: 1024, cx1: 265, cy1: 35,  cx2: 1161, cy2: 998,
-    tx: 234,  ty: 312, tvw: 192, z: 17 },
-
-  { id: 'ipod',
-    src1: '/hero-scene/ipod_1.png', src2: '/hero-scene/ipod_2.png',
-    iw: 1536, ih: 1024, cx1: 467, cy1: 179, cx2: 1004, cy2: 878,
-    tx: 241,  ty: 452, tvw: 80,  z: 18 },
-
-  { id: 'coffee',
-    src1: '/hero-scene/coffee_1.png', src2: '/hero-scene/coffee_2.png',
-    iw: 1536, ih: 1024, cx1: 307, cy1: 199, cx2: 1182, cy2: 853,
-    tx: 413,  ty: 442, tvw: 132, z: 19 },
-
-  { id: 'laptop',
-    src1: '/hero-scene/laptop_1.png', src2: '/hero-scene/laptop_2.png',
-    iw: 1536, ih: 1024, cx1: 86,  cy1: 212, cx2: 1337, cy2: 870,
-    tx: 728,  ty: 347, tvw: 390, z: 20 },
-
-  { id: 'cube',
-    src1: '/hero-scene/cube_1.png', src2: '/hero-scene/cube_2.png',
-    iw: 1536, ih: 1024, cx1: 421, cy1: 211, cx2: 1055, cy2: 803,
-    tx: 1038, ty: 467, tvw: 112, z: 21 },
-
-  { id: 'camera',
-    src1: '/hero-scene/camera_1.png', src2: '/hero-scene/camera_2.png',
-    iw: 1536, ih: 1024, cx1: 314, cy1: 256, cx2: 1168, cy2: 855,
-    tx: 1118, ty: 392, tvw: 218, z: 22 },
-
-  // AeroPress — portrait image (1024×1536)
-  { id: 'aeropress',
-    src1: '/hero-scene/aeropress_1.png', src2: null,
-    iw: 1024, ih: 1536, cx1: 216, cy1: 109, cx2: 831,  cy2: 1275,
-    tx: 1353, ty: 332, tvw: 162, z: 23 },
-];
+const sceneDefs = rawDefs.filter(d => !d.variant || d.variant === variant);
 
 /* ─────────────────────────────────────────────────
    Compute layout from content target
@@ -209,6 +135,7 @@ class SceneElement {
     const i1 = new Image();
     i1.className = 'img-1';
     i1.alt = def.id;
+    if (def.scale1) i1.style.transform = `scale(${def.scale1})`;
     el.appendChild(i1);
 
     if (def.src2) {
@@ -216,6 +143,7 @@ class SceneElement {
       i2.className = 'img-2';
       i2.alt = def.id + ' alt';
       i2.src = def.src2;
+      if (def.scale2) i2.style.transform = `scale(${def.scale2})`;
       el.appendChild(i2);
     }
 
@@ -280,7 +208,7 @@ function initScene() {
   // Clear any existing children in case of Astro view transitions reloading the script
   scenEl.innerHTML = '';
 
-  const elements = rawDefs.map(d => new SceneElement(d));
+  const elements = sceneDefs.map(d => new SceneElement(d));
 
   (async () => {
     // Load all elements (sequentially to keep memory manageable)
