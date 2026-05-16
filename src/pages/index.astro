@@ -102,14 +102,41 @@ import { allPosts, pubs } from '../data/content';
         ))}
       </div>
     </section>
+    {/* Recent research */}
+    <section style="margin-top: 60px;">
+      <div id="recent-research-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
+      </div>
+      <div id="pubs-list">
+        {pubs.slice(0, 3).map((pub, i) => (
+          <div class="pub-item" style={`
+            display: flex; align-items: baseline; gap: 20px;
+            padding: 11px 0; width: 100%; text-align: left;
+            border-top: ${i === 0 ? '1px solid var(--ink-5)' : 'none'};
+            border-bottom: 1px solid var(--ink-5);
+          `}>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 68px; flex-shrink: 0;">{pub.year}</span>
+            <span class="rt" data-en={pub.en} data-es={pub.es} style="font-family: var(--font-body); font-size: 16px; color: var(--ink); line-height: 1.4; flex: 1; padding-right: 16px; transition: color 0.15s; text-wrap: pretty;"></span>
+            <span class="pub-tag" data-type={pub.type} style="font-family: var(--font-mono); font-size: 9px; border-radius: 2px; padding: 2px 6px; color: var(--surface); white-space: nowrap;"></span>
+          </div>
+        ))}
+      </div>
+      <a href="/research" id="all-research-link" style="
+        margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px;
+        color: var(--interactive); background: none; border: none;
+        cursor: pointer; letter-spacing: 0.02em; padding: 0;
+        text-decoration: none; display: inline-block;
+        transition: color 0.15s;
+      ">
+      </a>
+    </section>
   </div>
 </MainLayout>
 
 <style>
   .cta-primary:hover { background: var(--ink-2) !important; }
   .cta-secondary:hover { background: var(--surface-2) !important; border-color: var(--ink-3) !important; }
-  .post-item:hover .pt { color: var(--interactive); }
-  #all-writing-link:hover { color: var(--interactive-hover); }
+  .post-item:hover .pt, .pub-item:hover .rt { color: var(--interactive); }
+  #all-writing-link:hover, #all-research-link:hover { color: var(--interactive-hover); }
 </style>
 
 <script>
@@ -151,6 +178,28 @@ import { allPosts, pubs } from '../data/content';
     document.querySelectorAll('.pt').forEach(el => {
       const target = el as HTMLElement;
       target.textContent = target.getAttribute(`data-${lang}`) || '';
+    });
+
+    // Research
+    const recentResearchHeading = document.getElementById('recent-research-heading');
+    if (recentResearchHeading) recentResearchHeading.textContent = lang === 'en' ? 'Recent research' : 'Investigación reciente';
+    const allResearchLink = document.getElementById('all-research-link');
+    if (allResearchLink) allResearchLink.textContent = lang === 'en' ? 'All research →' : 'Toda la investigación →';
+
+    const typeBg: Record<string, string> = { conference: 'var(--interactive)', workshop: 'var(--accent)', preprint: 'var(--ink-3)' };
+    document.querySelectorAll('.rt').forEach(el => {
+      const target = el as HTMLElement;
+      target.textContent = target.getAttribute(`data-${lang}`) || '';
+    });
+    document.querySelectorAll('.pub-tag').forEach(el => {
+      const target = el as HTMLElement;
+      const type = target.getAttribute('data-type') || '';
+      target.style.background = typeBg[type] || 'var(--ink-3)';
+      if (lang === 'es') {
+        target.textContent = type === 'conference' ? 'conferencia' : type === 'workshop' ? 'taller' : 'preprint';
+      } else {
+        target.textContent = type;
+      }
     });
 
     // Work items
