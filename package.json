@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "update-research": "node --env-file=.env scripts/fetch-orcid.js",
     "astro": "astro"
   },
   "dependencies": {

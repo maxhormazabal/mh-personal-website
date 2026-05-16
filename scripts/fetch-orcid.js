@@ -87,6 +87,14 @@ async function main() {
       const type = summary.type || 'other';
       const venue = summary['journal-title']?.value || 'ORCID';
       
+      // Intentar obtener autores
+      const contributors = summary['contributors']?.contributor || [];
+      const authorsList = contributors
+        .map(c => c['credit-name']?.value)
+        .filter(Boolean)
+        .join(', ');
+      const authors = authorsList || "Hormazábal M., et al.";
+
       // Mapear tipos de ORCID a los tuyos si es necesario
       let mappedType = 'preprint';
       if (type.includes('CONFERENCE')) mappedType = 'conference';
@@ -97,15 +105,14 @@ async function main() {
       const filePath = path.join(CONTENT_DIR, `${slug}.md`);
 
       // Solo creamos el archivo si no existe, para no sobreescribir tus ediciones manuales
-      // O puedes cambiarlo para que sobreescriba siempre si prefieres
       if (!fs.existsSync(filePath)) {
         const content = `---
-year: "${year}"
-type: "${mappedType}"
-venue: "${venue}"
-en: "${title}"
-es: "${title}" # ORCID suele devolver en inglés, puedes traducirlo a mano aquí
-authors: "Hormazábal M., et al." # ORCID tiene los autores, pero el parseo es complejo. Dejo este por defecto.
+year: ${JSON.stringify(year)}
+type: ${JSON.stringify(mappedType)}
+venue: ${JSON.stringify(venue.replace(/\s+/g, ' '))}
+en: ${JSON.stringify(title.replace(/\s+/g, ' '))}
+es: ${JSON.stringify(title.replace(/\s+/g, ' '))}
+authors: ${JSON.stringify(authors)}
 aen: "Resumen en inglés obtenido de ORCID..."
 aes: "Resumen en español (añadir manualmente)..."
 ---

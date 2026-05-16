@@ -37,7 +37,18 @@ All commands are run from the root of the project, from a terminal:
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm run update-research` | Actualiza los papers desde ORCID                 |
 
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## 📚 Integración con ORCID
+
+Para mantener actualizada la sección de investigación, puedes usar el script que conecta con la API de ORCID.
+
+1. Duplica el archivo `.env.example` y nómbralo `.env`.
+2. Rellena tus credenciales de ORCID (`ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET` y `ORCID_ID`).
+3. Ejecuta `npm run update-research`.
+
+El script solo añadirá publicaciones nuevas en `src/content/research/` sin sobreescribir las que ya hayas editado a mano.
