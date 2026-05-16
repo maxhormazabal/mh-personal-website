@@ -6,6 +6,7 @@ const researchCollection = defineCollection({
     year: z.string(),
     type: z.string(),
     venue: z.string(),
+    url: z.string().optional(),
     en: z.string(),
     es: z.string(),
     authors: z.string(),
