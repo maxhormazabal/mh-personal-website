@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero Scene</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #f5eed8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    #scene-outer {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #scene {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1600px;
+      height: 640px;
+      transform-origin: top left;
+      background: linear-gradient(175deg, #f7f1e3 0%, #f4ecd9 55%, #ede5cc 100%);
+      overflow: visible;
+    }
+
+    /* ── Element layers ── */
+    .el {
+      position: absolute;
+      pointer-events: none; /* hit-testing done in JS */
+    }
+
+    .el img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      transition: opacity 0.18s ease;
+    }
+
+    /* default: show state-1, hide state-2 */
+    .el .img-2 { opacity: 0; }
+
+    /* table uses cover fill */
+    #el-table img { object-fit: cover; object-position: center top; }
+
+    /* ── Hover state ── */
+    .el {
+      transition: opacity 0.55s ease, transform 0.35s cubic-bezier(0.22, 0.8, 0.4, 1), filter 0.22s ease;
+    }
+
+    .el.hovered {
+      z-index: 100 !important;
+      transform: translateY(-11px);
+      filter: drop-shadow(0 16px 28px rgba(180, 120, 0, 0.38)) drop-shadow(0 0 12px rgba(255, 210, 80, 0.28));
+    }
+
+    /* image swap — only for elements that have a _2 variant */
+    .el.has-alt.hovered .img-1 { opacity: 0; }
+    .el.has-alt.hovered .img-2 { opacity: 1; }
+
+    /* ── Entry fade ── */
+    .el {
+      opacity: 0;
+    }
+    .el.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div id="scene-outer">
+  <div id="scene"></div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────
+   Config
+───────────────────────────────────────────────── */
+const SCENE_W  = 1600;
+const SCENE_H  = 640;
+const HIT_SCALE = 0.25; // offscreen canvas scale (memory efficiency)
+const variant  = Math.random() < 0.5 ? 'A' : 'B';
+
+/* ─────────────────────────────────────────────────
+   Element definitions
+   tx/ty  → desired scene position of content's top-left corner
+   tvw    → desired visible width of element in scene pixels
+   cx1..cy2 → content bounding box in image space (from alpha scan)
+   iw/ih  → image natural size
+───────────────────────────────────────────────── */
+const rawDefs = [
+  // ── Background wall ──────────────────────────────────────────────
+  { id: 'board',
+    src1: 'uploads/board_1.png', src2: null,
+    iw: 1536, ih: 1024, cx1: 36,  cy1: 89,  cx2: 1499, cy2: 873,
+    tx: 5,    ty: 5,   tvw: 510, z: 2 },
+
+  { id: 'painting',
+    src1: 'uploads/painting_1.png', src2: 'uploads/painting_2.png',
+    iw: 1536, ih: 1024, cx1: 0,   cy1: 0,   cx2: 1535, cy2: 1023,
+    tx: 935,  ty: 5,   tvw: 665, z: 3 },
+
+  // ── Human (random scene variant) ─────────────────────────────────
+  ...(variant === 'A' ? [{
+    id: 'human',
+    src1: 'uploads/human_1A.png', src2: 'uploads/human_2A.png',
+    iw: 1536, ih: 1024, cx1: 297, cy1: 44,  cx2: 1199, cy2: 948,
+    tx: 390,  ty: 0,   tvw: 695, z: 4
+  }] : [{
+    id: 'human',
+    src1: 'uploads/human_1B.png', src2: 'uploads/human_2B.png',
+    iw: 1536, ih: 1024, cx1: 249, cy1: 32,  cx2: 1316, cy2: 1023,
+    tx: 375,  ty: 0,   tvw: 700, z: 4
+  }]),
+
+  // ── Table surface (static — no hover) ────────────────────────────
+  { id: 'table', isStatic: true, coverMode: true,
+    src1: 'uploads/table.png', src2: null,
+    left: -55, top: 468, width: 1710, height: 230, z: 15 },
+
+  // ── Desk objects ─────────────────────────────────────────────────
+  { id: 'books',
+    src1: 'uploads/books_1.png', src2: 'uploads/books_2.png',
+    iw: 1536, ih: 1024, cx1: 367, cy1: 191, cx2: 1154, cy2: 821,
+    tx: 10,   ty: 322, tvw: 278, z: 16 },
+
+  { id: 'cat',
+    src1: 'uploads/cat_1.png', src2: 'uploads/cat_2.png',
+    iw: 1536, ih: 1024, cx1: 265, cy1: 35,  cx2: 1161, cy2: 998,
+    tx: 234,  ty: 312, tvw: 192, z: 17 },
+
+  { id: 'ipod',
+    src1: 'uploads/ipod_1.png', src2: 'uploads/ipod_2.png',
+    iw: 1536, ih: 1024, cx1: 467, cy1: 179, cx2: 1004, cy2: 878,
+    tx: 241,  ty: 452, tvw: 80,  z: 18 },
+
+  { id: 'coffee',
+    src1: 'uploads/coffee_1.png', src2: 'uploads/coffee_2.png',
+    iw: 1536, ih: 1024, cx1: 307, cy1: 199, cx2: 1182, cy2: 853,
+    tx: 413,  ty: 442, tvw: 132, z: 19 },
+
+  { id: 'laptop',
+    src1: 'uploads/laptop_1.png', src2: 'uploads/laptop_2.png',
+    iw: 1536, ih: 1024, cx1: 86,  cy1: 212, cx2: 1337, cy2: 870,
+    tx: 728,  ty: 347, tvw: 390, z: 20 },
+
+  { id: 'cube',
+    src1: 'uploads/cube_1.png', src2: 'uploads/cube_2.png',
+    iw: 1536, ih: 1024, cx1: 421, cy1: 211, cx2: 1055, cy2: 803,
+    tx: 1038, ty: 467, tvw: 112, z: 21 },
+
+  { id: 'camera',
+    src1: 'uploads/camera_1.png', src2: 'uploads/camera_2.png',
+    iw: 1536, ih: 1024, cx1: 314, cy1: 256, cx2: 1168, cy2: 855,
+    tx: 1118, ty: 392, tvw: 218, z: 22 },
+
+  // AeroPress — portrait image (1024×1536)
+  { id: 'aeropress',
+    src1: 'uploads/aeropress_1.png', src2: null,
+    iw: 1024, ih: 1536, cx1: 216, cy1: 109, cx2: 831,  cy2: 1275,
+    tx: 1353, ty: 332, tvw: 162, z: 23 },
+];
+
+/* ─────────────────────────────────────────────────
+   Compute layout from content target
+───────────────────────────────────────────────── */
+function computeLayout(def) {
+  if (def.coverMode) {
+    return { left: def.left, top: def.top, width: def.width, height: def.height };
+  }
+  const S    = def.tvw / (def.cx2 - def.cx1);
+  const divW = Math.round(def.iw * S);
+  const divH = Math.round(def.ih * S);
+  const left = Math.round(def.tx - def.cx1 * S);
+  const top  = Math.round(def.ty - def.cy1 * S);
+  return { left, top, width: divW, height: divH };
+}
+
+/* ─────────────────────────────────────────────────
+   SceneElement class
+───────────────────────────────────────────────── */
+class SceneElement {
+  constructor(def) {
+    this.def     = def;
+    this.layout  = computeLayout(def);
+    this.domEl   = null;
+    this.hitCtx  = null;
+    this.hovered = false;
+  }
+
+  async load() {
+    const def = this.def;
+
+    // Build DOM
+    const el = document.createElement('div');
+    el.className = 'el';
+    el.id = `el-${def.id}`;
+    const { left, top, width, height } = this.layout;
+    el.style.cssText =
+      `left:${left}px; top:${top}px; width:${width}px; height:${height}px; z-index:${def.z};`;
+    if (def.src2) el.classList.add('has-alt');
+
+    const i1 = new Image();
+    i1.className = 'img-1';
+    i1.alt = def.id;
+    el.appendChild(i1);
+
+    if (def.src2) {
+      const i2 = new Image();
+      i2.className = 'img-2';
+      i2.alt = def.id + ' alt';
+      i2.src = def.src2;
+      el.appendChild(i2);
+    }
+
+    this.domEl = el;
+    document.getElementById('scene').appendChild(el);
+
+    // Load img1 and create hit canvas
+    await new Promise(resolve => {
+      i1.onload  = resolve;
+      i1.onerror = resolve;
+      i1.src = def.src1;
+    });
+
+    if (!def.isStatic) {
+      try {
+        const hc = document.createElement('canvas');
+        hc.width  = Math.ceil(def.iw * HIT_SCALE);
+        hc.height = Math.ceil(def.ih * HIT_SCALE);
+        const ctx = hc.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(i1, 0, 0, hc.width, hc.height);
+        this.hitCtx = ctx;
+        this.hitW   = hc.width;
+        this.hitH   = hc.height;
+      } catch (e) {
+        // CORS or security error — fall back to AABB
+        this.hitCtx = null;
+      }
+    }
+  }
+
+  hitTest(sx, sy) {
+    const { left, top, width, height } = this.layout;
+    if (sx < left || sx > left + width || sy < top || sy > top + height) return false;
+    if (!this.hitCtx) {
+      // AABB fallback (no pixel test)
+      return true;
+    }
+    const px = Math.floor((sx - left) / width  * this.hitW);
+    const py = Math.floor((sy - top)  / height * this.hitH);
+    const cx = Math.max(0, Math.min(px, this.hitW  - 1));
+    const cy = Math.max(0, Math.min(py, this.hitH  - 1));
+    return this.hitCtx.getImageData(cx, cy, 1, 1).data[3] > 18;
+  }
+
+  setHovered(h) {
+    if (this.hovered === h) return;
+    this.hovered = h;
+    this.domEl.classList.toggle('hovered', h);
+  }
+}
+
+/* ─────────────────────────────────────────────────
+   Build scene
+───────────────────────────────────────────────── */
+const outer  = document.getElementById('scene-outer');
+const scenEl = document.getElementById('scene');
+const elements = rawDefs.map(d => new SceneElement(d));
+
+(async () => {
+  // Load all elements (sequentially to keep memory manageable)
+  for (const el of elements) await el.load();
+  setupInteraction();
+  setupScaling();
+  revealElements();
+})();
+
+/* ─────────────────────────────────────────────────
+   Staggered reveal
+───────────────────────────────────────────────── */
+function revealElements() {
+  const byZ = [...elements].sort((a, b) => a.def.z - b.def.z);
+  byZ.forEach((el, i) => {
+    setTimeout(() => el.domEl.classList.add('visible'), 120 + i * 70);
+  });
+}
+
+/* ─────────────────────────────────────────────────
+   Interaction — pixel-perfect hover
+───────────────────────────────────────────────── */
+function setupInteraction() {
+  // Sorted front-to-back for hit priority
+  const hoverable = [...elements]
+    .filter(e => !e.def.isStatic)
+    .sort((a, b) => b.def.z - a.def.z);
+
+  let animId = null;
+  let lastSx = -1, lastSy = -1;
+
+  function processHover(sx, sy) {
+    lastSx = sx; lastSy = sy;
+    let hit = null;
+    for (const el of hoverable) {
+      if (el.hitTest(sx, sy)) { hit = el; break; }
+    }
+    for (const el of hoverable) el.setHovered(el === hit);
+    outer.style.cursor = hit ? 'pointer' : 'default';
+  }
+
+  outer.addEventListener('mousemove', e => {
+    if (animId) cancelAnimationFrame(animId);
+    animId = requestAnimationFrame(() => {
+      const rect  = outer.getBoundingClientRect();
+      const scale = rect.width / SCENE_W;
+      const sx    = (e.clientX - rect.left)  / scale;
+      const sy    = (e.clientY - rect.top)   / scale;
+      processHover(sx, sy);
+    });
+  });
+
+  outer.addEventListener('mouseleave', () => {
+    for (const el of hoverable) el.setHovered(false);
+    outer.style.cursor = 'default';
+  });
+}
+
+/* ─────────────────────────────────────────────────
+   Responsive scaling
+───────────────────────────────────────────────── */
+function setupScaling() {
+  function update() {
+    const scale = outer.clientWidth / SCENE_W;
+    scenEl.style.transform = `scale(${scale})`;
+    outer.style.height     = `${Math.round(SCENE_H * scale)}px`;
+  }
+  const ro = new ResizeObserver(update);
+  ro.observe(outer);
+  update();
+}
+</script>
+</body>
+</html>
