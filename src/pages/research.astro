@@ -53,6 +53,11 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
 <style>
   .scholar-link:hover { color: var(--interactive-hover) !important; }
   .paper-link-icon:hover { color: var(--interactive) !important; }
+
+  :global([data-theme="dark"]) .pub-type[data-type="conference"],
+  :global([data-theme="dark"]) .pub-type[data-type="workshop"] {
+    color: var(--ink-2) !important;
+  }
 </style>
 
 <script>
