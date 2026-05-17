@@ -1,66 +1,116 @@
 export const allPosts = [
-  { date: 'Apr 2026', en: 'On document layout as a first-class model input',   es: 'El layout del documento como input de primer orden',       type: 'essay', tags: ['document-ai','multimodal'], mins: 9  },
-  { date: 'Feb 2026', en: 'Teaching AI to a room with no CS background',        es: 'Enseñar IA a quien no sabe programar',                     type: 'essay', tags: ['education','pedagogy'],     mins: 7  },
-  { date: 'Jan 2026', en: 'A working note on table extraction from PDFs',        es: 'Nota de trabajo: extracción de tablas en PDFs',            type: 'note',  tags: ['document-ai'],              mins: 5  },
-  { date: 'Nov 2025', en: "What 'multimodal' really means — and doesn't",        es: 'Lo que "multimodal" realmente significa (y lo que no)',    type: 'essay', tags: ['multimodal','nlp'],         mins: 11 },
-  { date: 'Sep 2025', en: 'On the gap between research and production',           es: 'La brecha entre investigación y producción',               type: 'essay', tags: ['engineering','research'],   mins: 8  },
-  { date: 'Jul 2025', en: 'Why I still teach after seven years',                  es: 'Por qué sigo enseñando después de siete años',            type: 'essay', tags: ['education'],                mins: 6  },
-  { date: 'May 2025', en: 'Reading notes: LayoutLM and its successors',           es: 'Notas de lectura: LayoutLM y sus sucesores',              type: 'note',  tags: ['document-ai','paper-notes'], mins: 5  },
+  { date: 'Apr 2026', en: 'On document layout as a first-class model input', es: 'El layout del documento como input de primer orden', type: 'essay', tags: ['document-ai', 'multimodal'], mins: 9 },
+  { date: 'Feb 2026', en: 'Teaching AI to a room with no CS background', es: 'Enseñar IA a quien no sabe programar', type: 'essay', tags: ['education', 'pedagogy'], mins: 7 },
+  { date: 'Jan 2026', en: 'A working note on table extraction from PDFs', es: 'Nota de trabajo: extracción de tablas en PDFs', type: 'note', tags: ['document-ai'], mins: 5 },
+  { date: 'Nov 2025', en: "What 'multimodal' really means — and doesn't", es: 'Lo que "multimodal" realmente significa (y lo que no)', type: 'essay', tags: ['multimodal', 'nlp'], mins: 11 },
+  { date: 'Sep 2025', en: 'On the gap between research and production', es: 'La brecha entre investigación y producción', type: 'essay', tags: ['engineering', 'research'], mins: 8 },
+  { date: 'Jul 2025', en: 'Why I still teach after seven years', es: 'Por qué sigo enseñando después de siete años', type: 'essay', tags: ['education'], mins: 6 },
+  { date: 'May 2025', en: 'Reading notes: LayoutLM and its successors', es: 'Notas de lectura: LayoutLM y sus sucesores', type: 'note', tags: ['document-ai', 'paper-notes'], mins: 5 },
 ];
 
 
 
 export const courses = {
-  en: [
-    { title: 'Statistics for Data Science',           years: '2016–2022',   context: 'Universidad del Bío-Bío, Chile',   level: 'Undergraduate', icon: 'book'      },
-    { title: 'Machine Learning Fundamentals',          years: '2019–present', context: 'Various institutions',             level: 'Intermediate',  icon: 'cpu'       },
-    { title: 'Python for Data Engineering',            years: '2022–2023',   context: 'NTT DATA',                         level: 'Professional',  icon: 'code'      },
-    { title: 'Introduction to AI & Neural Networks',   years: '2023–present', context: 'Graduate seminar, USC / UAB',      level: 'Graduate',      icon: 'layers'    },
-  ],
-  es: [
-    { title: 'Estadística para Ciencia de Datos',     years: '2016–2022',   context: 'Universidad del Bío-Bío, Chile',  level: 'Grado',       icon: 'book'   },
-    { title: 'Fundamentos de Machine Learning',        years: '2019–presente', context: 'Diversas instituciones',          level: 'Intermedio',  icon: 'cpu'    },
-    { title: 'Python para Ingeniería de Datos',        years: '2022–2023',   context: 'NTT DATA',                        level: 'Profesional', icon: 'code'   },
-    { title: 'Introducción a la IA y Redes Neuronales',years: '2023–presente', context: 'Seminario posgrado, USC / UAB',   level: 'Posgrado',    icon: 'layers' },
-  ]
+  en: {
+    lectures: [
+      { title: 'Applied Statistics for Engineering', years: '2021', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'chart-column' },
+      { title: 'Data Analytics', years: '2022', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'bar-chart' },
+    ],
+    practicalSessions: [
+      { title: 'Machine Learning', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Graduate', icon: 'cpu' },
+      { title: 'Advanced Machine Learning', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Graduate', icon: 'brain' },
+      { title: 'Deep Learning', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Graduate', icon: 'layers' },
+      { title: 'Big Data Systems', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Graduate', icon: 'database' },
+    ],
+    teachersAssistant: [
+      { title: 'Data Mining', years: '2021', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'search' },
+      { title: 'Econometrics', years: '2021', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'line-chart' },
+      { title: 'Information Systems Modeling', years: '2019–2021', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'network' },
+      { title: 'Microeconomics', years: '2019–2021', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'line-chart' },
+      { title: 'Software Engineering for Industrial Engineering', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'code' },
+      { title: 'Production Systems', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'factory' },
+      { title: 'Differential Equations', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'function-square' },
+      { title: 'Algebra and Trigonometry', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Undergraduate', icon: 'sigma' },
+    ]
+  },
+  es: {
+    lectures: [
+      { title: 'Métodos Estadísticos Aplicados a Ingeniería', years: '2021', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'chart-column' },
+      { title: 'Data Analytics', years: '2022', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'bar-chart' },
+    ],
+    practicalSessions: [
+      { title: 'Machine Learning', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Posgrado', icon: 'cpu' },
+      { title: 'Machine Learning Avanzado', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Posgrado', icon: 'brain' },
+      { title: 'Deep Learning', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Posgrado', icon: 'layers' },
+      { title: 'Big Data', years: '2021–2022', context: 'Universidad San Sebastián, Chile', level: 'Posgrado', icon: 'database' },
+    ],
+    teachersAssistant: [
+      { title: 'Minería de Datos', years: '2021', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'search' },
+      { title: 'Econometría', years: '2021', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'line-chart' },
+      { title: 'Modelamiento de Sistemas Informáticos', years: '2019–2021', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'network' },
+      { title: 'Microeconomía', years: '2019–2021', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'line-chart' },
+      { title: 'Software para Ingeniería Industrial', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'code' },
+      { title: 'Producción', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'factory' },
+      { title: 'Ecuaciones Diferenciales', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'function-square' },
+      { title: 'Álgebra y Trigonometría', years: '2018', context: 'Universidad del Bío-Bío, Chile', level: 'Pregrado', icon: 'sigma' },
+    ]
+  }
 };
 
 export const work = {
   en: [
-    { year: '2023–',    role: 'PhD Researcher',  org: 'Computer Vision Center (CVC · UAB)',       note: 'Multimodal document understanding' },
-    { year: '2023–',    role: 'Founder',          org: 'Document AI startup',                      note: 'Document processing & field extraction' },
-    { year: '2022–23',  role: 'Data Engineer',    org: 'NTT DATA',                                 note: null },
-    { year: '2016–',    role: 'Teacher',          org: 'Independent',                              note: 'Statistics, data science, AI' },
+    { year: '2025–', role: 'PhD Researcher', org: 'Computer Vision Center (CVC · UAB)', note: 'Document Analysis Group; multimodal document understanding' },
+    { year: '2024–', role: 'Research Engineer', org: 'Gradiant', note: 'AI, NLP and document processing systems' },
+    { year: '2024–', role: 'Founder & AI Developer', org: 'Dokken', note: 'Document processing and field extraction' },
+    { year: '2023–24', role: 'Natural Language Processing Intern', org: 'Gradiant', note: 'LLMs for question answering systems' },
+    { year: '2023', role: 'Data Engineer', org: 'NTT DATA Europe & Latam', note: 'Big Data systems with Spark and Scala' },
+    { year: '2022', role: 'Centers Developer | Big Data & Machine Learning', org: 'NTT DATA Europe & LATAM', note: 'Big Data pipelines with Spark, Hadoop, Oozie, NiFi and Shell scripting' },
+    { year: '2021–22', role: 'Part-time University Lecturer', org: 'Universidad del Bío-Bío', note: 'Statistics, data analytics and engineering courses' },
+    { year: '2018–22', role: 'Teaching Assistant', org: 'Universidad del Bío-Bío / Universidad San Sebastián', note: 'Machine learning, deep learning, big data, statistics and engineering courses' },
+    { year: '2021–22', role: 'Data Science Intern', org: 'Krino', note: 'Data science internship' },
+    { year: '2021', role: 'Engineering Intern', org: 'Telefónica', note: 'RPA, reporting and process automation' },
   ],
   es: [
-    { year: '2023–',    role: 'Investigador PhD', org: 'Centre de Visió per Computador (CVC · UAB)', note: 'Comprensión multimodal de documentos' },
-    { year: '2023–',    role: 'Fundador',         org: 'Startup de IA documental',                  note: 'Procesamiento y extracción de documentos' },
-    { year: '2022–23',  role: 'Data Engineer',    org: 'NTT DATA',                                  note: null },
-    { year: '2016–',    role: 'Docente',          org: 'Independiente',                             note: 'Estadística, ciencia de datos, IA' },
+    { year: '2025–', role: 'Investigador Doctoral', org: 'Centre de Visió per Computador (CVC · UAB)', note: 'Document Analysis Group; comprensión multimodal de documentos' },
+    { year: '2024–', role: 'Research Engineer', org: 'Gradiant', note: 'Sistemas de IA, NLP y procesamiento documental' },
+    { year: '2024–', role: 'Fundador y desarrollador IA', org: 'Dokken', note: 'Procesamiento documental y extracción de campos' },
+    { year: '2023–24', role: 'Intern en Natural Language Processing', org: 'Gradiant', note: 'LLMs aplicados a sistemas de preguntas y respuestas' },
+    { year: '2023', role: 'Data Engineer', org: 'NTT DATA Europe & Latam', note: 'Sistemas Big Data con Spark y Scala' },
+    { year: '2022', role: 'Centers Developer | Big Data & Machine Learning', org: 'NTT DATA Europe & LATAM', note: 'Pipelines Big Data con Spark, Hadoop, Oozie, NiFi y Shell scripting' },
+    { year: '2021–22', role: 'Profesor universitario a tiempo parcial', org: 'Universidad del Bío-Bío', note: 'Estadística, data analytics y asignaturas de ingeniería' },
+    { year: '2018–22', role: 'Ayudante de profesor', org: 'Universidad del Bío-Bío / Universidad San Sebastián', note: 'Machine learning, deep learning, big data, estadística e ingeniería' },
+    { year: '2021–22', role: 'Data Science Intern', org: 'Krino', note: 'Prácticas en ciencia de datos' },
+    { year: '2021', role: 'Prácticas de ingeniería', org: 'Telefónica', note: 'RPA, reportes y automatización de procesos' },
   ]
 };
 
 export const edu = {
   en: [
-    { year: '2022–24', degree: 'MSc Artificial Intelligence',  school: 'University of Santiago de Compostela', loc: 'Galicia, Spain' },
-    { year: '2017–21', degree: 'BEng Industrial Engineering',  school: 'University of Bío-Bío',               loc: 'Chile' },
+    { year: '2025–28', degree: 'PhD in Computational Science', school: 'Autonomous University of Barcelona', loc: 'Barcelona, Spain' },
+    { year: '2022–24', degree: 'MSc Artificial Intelligence', school: 'University of Santiago de Compostela', loc: 'Galicia, Spain' },
+    { year: '2022', degree: 'Front-End Development with React', school: 'Coderhouse', loc: 'Online' },
+    { year: '2021', degree: 'Diploma in Social Skills and Labor Inclusion', school: 'University of Bío-Bío', loc: 'Chile' },
+    { year: '2017–21', degree: 'BEng Industrial Engineering', school: 'University of Bío-Bío', loc: 'Chile' },
   ],
   es: [
+    { year: '2024–28', degree: 'Doctorado en Ciencias de la Computación', school: 'Universitat Autònoma de Barcelona', loc: 'Barcelona, España' },
     { year: '2022–24', degree: 'Máster en Inteligencia Artificial', school: 'Universidad de Santiago de Compostela', loc: 'Galicia, España' },
-    { year: '2017–21', degree: 'Ingeniería Industrial',              school: 'Universidad del Bío-Bío',              loc: 'Chile' },
+    { year: '2022', degree: 'Desarrollo Front-End con React', school: 'Coderhouse', loc: 'Online' },
+    { year: '2021', degree: 'Diplomado en Habilidades Sociales e Inserción Laboral', school: 'Universidad del Bío-Bío', loc: 'Chile' },
+    { year: '2017–21', degree: 'Ingeniería Civil Industrial', school: 'Universidad del Bío-Bío', loc: 'Chile' },
   ]
 };
 
 export const bio = {
   en: [
-    "I'm Maximiliano Hormazábal — Max. Born in Chile, now living in Galicia, Spain. I'm a researcher and builder working at the intersection of AI, document understanding, and education.",
-    "Currently pursuing a PhD at the Computer Vision Center (UAB), I work on multimodal systems that navigate and understand complex visual information — PDFs, forms, tables, technical documents. Alongside research, I build real-world AI systems through a document processing startup focused on taking advanced AI into practical use.",
-    "My broader interest lies in how these technologies can reshape the way we learn, teach, and interact with knowledge. I've been teaching since I was 17, and I don't plan to stop.",
-    "This site is a long-running public workspace. Writing here helps me think. It accumulates slowly, and that's intentional.",
+    "I'm Max, passionate about teaching and education. I'm Chilean, and in 2022 I left my country to pursue my path as an entrepreneur and researcher in the field of AI. I work at the intersection of Document Understanding and Education.",
+    "I am currently a PhD student at the Computer Vision Center at UAB in Barcelona, where I work on multimodal systems that navigate and understand complex visual information across different domains. Alongside my research, I am also the co-founder of a document processing startup, where we help companies process thousands of complex documents to optimize their daily operations.",
+    "My broader interest lies in how these technologies can transform the way we learn, teach, and interact with knowledge. I have been teaching since I was 17, and I have no intention of stopping.",
+    "This site is a long-term public workspace. Writing here helps me think. It grows slowly, and that is intentional.",
   ],
   es: [
-    "Soy Maximiliano Hormazábal — Max. Nacido en Chile, ahora viviendo en Galicia, España. Soy investigador y creador trabajando en la intersección de la IA, la comprensión de documentos y la educación.",
-    "Actualmente doctorando en el Centre de Visió per Computador (UAB), trabajo en sistemas multimodales que navegan y comprenden información visual compleja — PDFs, formularios, tablas, documentos técnicos. Junto a la investigación, construyo sistemas de IA aplicados a través de una startup de procesamiento documental.",
+    "Soy Max, apasionado por la docencia y la educación, soy chileno y en 2022 dejé mi país para seguir mi carrera de emprendedor e investigador en el campo de la IA, trabajo en la intersección de Document Understanding y Educación.",
+    "Actualmente soy estudiante de doctorado en el Centro de Visión por Computador en la UAB en Barcelona, trabajo en sistemas multimodales que navegan y comprenden información visual compleja en distintos tipos de dominio. Junto a la investigación, soy cofundador de una startup de procesamiento documental, ayudamos a empresas a procesar miles de documentos complejos para optimizar la operación diara",
     "Mi interés más amplio radica en cómo estas tecnologías pueden transformar la forma en que aprendemos, enseñamos e interactuamos con el conocimiento. Llevo enseñando desde los 17 años, y no tengo intención de parar.",
     "Este sitio es un espacio de trabajo público de largo recorrido. Escribir aquí me ayuda a pensar. Se acumula despacio, y eso es intencional.",
   ]
