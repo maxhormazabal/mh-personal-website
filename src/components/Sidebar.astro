@@ -305,6 +305,10 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
     .sidebar-bio, .sidebar-connect {
       display: none;
     }
+
+    :global([data-theme="dark"]) .nav-item:not(.active) {
+      color: var(--ink-2) !important;
+    }
   }
 
   :global([data-theme="dark"]) #theme-toggle,
