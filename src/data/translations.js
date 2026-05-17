@@ -24,7 +24,7 @@ export const T = {
     about_quote: "AI should not only process information — it should help people understand, learn, and think better.",
     work_heading: 'Work', edu_heading: 'Education',
     connect_heading: 'Connect',
-    note_placeholder: '↗ Publication entries are illustrative — replace with your actual papers, or link directly to your Google Scholar profile.',
+    note_placeholder: 'I’m always interested in conversations around document intelligence, multimodal systems, education, and long-term human–AI interaction. Collaboration are welcome.',
   },
   es: {
     nav: { research: 'investigación', teaching: 'docencia', writing: 'escritura', about: 'sobre mí' },
@@ -51,6 +51,6 @@ export const T = {
     about_quote: "La IA no solo debería procesar información — debería ayudar a las personas a entender, aprender y pensar mejor.",
     work_heading: 'Experiencia', edu_heading: 'Educación',
     connect_heading: 'Contacto',
-    note_placeholder: '↗ Las publicaciones son ilustrativas — reemplázalas con tus papers reales, o enlaza directamente a tu perfil de Google Scholar.',
+    note_placeholder: 'Siempre me interesan las conversaciones sobre inteligencia documental, sistemas multimodales, educación e interacción humano–IA a largo plazo. Las colaboraciones son bienvenidas.',
   },
 };

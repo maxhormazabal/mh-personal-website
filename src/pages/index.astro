@@ -53,39 +53,40 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
         </a>
       </div>
     </div>
-
+    
     <hr style="border: none; border-top: 1px solid var(--ink-5); margin-bottom: 48px;" />
-
-    {/* Recent writing */}
+    
+    {/* Recent research */}
     <section style="margin-bottom: 60px;">
-      <div id="recent-writing-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
+      <div id="recent-research-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
       </div>
-      <div id="posts-list">
-        {allPosts.slice(0, 5).map((post, i) => (
-          <div class="post-item" style={`
+      <div id="pubs-list">
+        {pubs.slice(0, 3).map((pub, i) => (
+          <div class="pub-item" style={`
             display: flex; align-items: baseline; gap: 20px;
             padding: 11px 0; width: 100%; text-align: left;
             border-top: ${i === 0 ? '1px solid var(--ink-5)' : 'none'};
             border-bottom: 1px solid var(--ink-5);
-          `}>
-            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 68px; flex-shrink: 0;">{post.date}</span>
-            <span class="pt" data-en={post.en} data-es={post.es} style="font-family: var(--font-body); font-size: 16px; color: var(--ink); line-height: 1.4; flex: 1; padding-right: 16px; transition: color 0.15s; text-wrap: pretty;"></span>
-            <span style="font-family: var(--font-mono); font-size: 9px; background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 2px; padding: 2px 6px; color: var(--ink-3); white-space: nowrap;">{post.type}</span>
-          </div>
-        ))}
+            `}>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 68px; flex-shrink: 0;">{pub.year}</span>
+            <span class="rt" data-en={pub.en} data-es={pub.es} style="font-family: var(--font-body); font-size: 16px; color: var(--ink); line-height: 1.4; flex: 1; padding-right: 16px; transition: color 0.15s; text-wrap: pretty;"></span>
+            <span class="pub-tag" data-type={pub.type} style="font-family: var(--font-mono); font-size: 9px; border-radius: 2px; padding: 2px 6px; color: var(--surface); white-space: nowrap;"></span>
+            </div>
+          ))}
       </div>
-      <a href="/writing" id="all-writing-link" style="
-        margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px;
-        color: var(--interactive); background: none; border: none;
-        cursor: pointer; letter-spacing: 0.02em; padding: 0;
-        text-decoration: none; display: inline-block;
-        transition: color 0.15s;
+      <a href="/research" id="all-research-link" style="
+      margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px;
+      color: var(--interactive); background: none; border: none;
+      cursor: pointer; letter-spacing: 0.02em; padding: 0;
+      text-decoration: none; display: inline-block;
+      transition: color 0.15s;
       ">
-      </a>
-    </section>
-
+    </a>
+  </section>
+  
+  
     {/* What I work on */}
-    <section>
+    <section style="margin-bottom: 60px;">
       <div id="what-i-work-on-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -98,41 +99,41 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
           <div style="background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 4px; padding: 18px;">
             <div style="color: var(--ink-4); margin-bottom: 10px;"><Icon name={item.icon} size={16} /></div>
             <div class="work-title" data-en={item.en} data-es={item.es} style="font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--ink); margin-bottom: 7px; line-height: 1.25;">
-            </div>
-            <div class="work-desc" data-en={item.den} data-es={item.des} style="font-family: var(--font-body); font-size: 13px; color: var(--ink-2); line-height: 1.65;">
-            </div>
-          </div>
-        ))}
+              </div>
+              <div class="work-desc" data-en={item.den} data-es={item.des} style="font-family: var(--font-body); font-size: 13px; color: var(--ink-2); line-height: 1.65;">
+                </div>
+                </div>
+              ))}
       </div>
     </section>
-    {/* Recent research */}
-    <section style="margin-top: 60px;">
-      <div id="recent-research-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
-      </div>
-      <div id="pubs-list">
-        {pubs.slice(0, 3).map((pub, i) => (
-          <div class="pub-item" style={`
-            display: flex; align-items: baseline; gap: 20px;
-            padding: 11px 0; width: 100%; text-align: left;
-            border-top: ${i === 0 ? '1px solid var(--ink-5)' : 'none'};
-            border-bottom: 1px solid var(--ink-5);
-          `}>
-            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 68px; flex-shrink: 0;">{pub.year}</span>
-            <span class="rt" data-en={pub.en} data-es={pub.es} style="font-family: var(--font-body); font-size: 16px; color: var(--ink); line-height: 1.4; flex: 1; padding-right: 16px; transition: color 0.15s; text-wrap: pretty;"></span>
-            <span class="pub-tag" data-type={pub.type} style="font-family: var(--font-mono); font-size: 9px; border-radius: 2px; padding: 2px 6px; color: var(--surface); white-space: nowrap;"></span>
-          </div>
-        ))}
-      </div>
-      <a href="/research" id="all-research-link" style="
-        margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px;
-        color: var(--interactive); background: none; border: none;
-        cursor: pointer; letter-spacing: 0.02em; padding: 0;
-        text-decoration: none; display: inline-block;
-        transition: color 0.15s;
-      ">
-      </a>
-    </section>
-  </div>
+  {/* Recent writing */}
+  <section style="margin-bottom: 20px;">
+    <div id="recent-writing-heading" style="font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;">
+    </div>
+    <div id="posts-list">
+      {allPosts.slice(0, 5).map((post, i) => (
+        <div class="post-item" style={`
+          display: flex; align-items: baseline; gap: 20px;
+          padding: 11px 0; width: 100%; text-align: left;
+          border-top: ${i === 0 ? '1px solid var(--ink-5)' : 'none'};
+          border-bottom: 1px solid var(--ink-5);
+        `}>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); width: 68px; flex-shrink: 0;">{post.date}</span>
+          <span class="pt" data-en={post.en} data-es={post.es} style="font-family: var(--font-body); font-size: 16px; color: var(--ink); line-height: 1.4; flex: 1; padding-right: 16px; transition: color 0.15s; text-wrap: pretty;"></span>
+          <span style="font-family: var(--font-mono); font-size: 9px; background: var(--surface-2); border: 1px solid var(--ink-5); border-radius: 2px; padding: 2px 6px; color: var(--ink-3); white-space: nowrap;">{post.type}</span>
+        </div>
+      ))}
+    </div>
+    <a href="/writing" id="all-writing-link" style="
+      margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px;
+      color: var(--interactive); background: none; border: none;
+      cursor: pointer; letter-spacing: 0.02em; padding: 0;
+      text-decoration: none; display: inline-block;
+      transition: color 0.15s;
+    ">
+    </a>
+  </section>
+</div>
 </MainLayout>
 
 <style>
