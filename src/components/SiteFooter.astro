@@ -13,4 +13,12 @@ import Icon from './Icon.astro';
 
 <style>
   .footer-mail:hover { color: var(--ink); }
+
+  :global([data-theme="dark"]) footer {
+    border-top-color: var(--ink-4) !important;
+  }
+  :global([data-theme="dark"]) footer span,
+  :global([data-theme="dark"]) footer a {
+    color: var(--ink-3) !important;
+  }
 </style>
