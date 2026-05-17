@@ -66,6 +66,12 @@ body {
 
 @media (max-width: 768px) {
   .page-container {
+    padding: 24px 16px 40px 62px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
     padding: 24px 16px 40px;
   }
 }
