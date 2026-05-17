@@ -10,7 +10,7 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
 ---
 
 <MainLayout title="Max Hormazábal">
-  <div style="padding: 64px 64px 80px; max-width: 820px; width: 100%;">
+  <div class="page-container">
     {/* Hero */}
     <div style="margin-bottom: 64px;">
       <div style="margin-bottom: 28px;">
@@ -137,6 +137,18 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
 </MainLayout>
 
 <style>
+  .page-container {
+    padding: 64px 64px 80px;
+    max-width: 820px;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 24px 16px 40px;
+    }
+  }
+
   .cta-primary:hover { background: var(--ink-2) !important; }
   .cta-secondary:hover { background: var(--surface-2) !important; border-color: var(--ink-3) !important; }
   .post-item:hover .pt, .pub-item:hover .rt { color: var(--interactive); }

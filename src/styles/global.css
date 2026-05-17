@@ -59,3 +59,13 @@ body {
 @media (min-width: 769px) {
   .show-on-mobile { display: none !important; }
 }
+
+.page-container {
+  padding: 64px 64px 80px;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 24px 16px 40px;
+  }
+}
