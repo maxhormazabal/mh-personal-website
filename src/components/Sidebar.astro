@@ -306,6 +306,12 @@ const currentPath = pathname === '/' ? 'home' : pathname.replace('/', '');
       display: none;
     }
   }
+
+  :global([data-theme="dark"]) #theme-toggle,
+  :global([data-theme="dark"]) #lang-toggle {
+    color: var(--ink-3) !important;
+    border-color: var(--ink-4) !important;
+  }
 </style>
 
 <script>
