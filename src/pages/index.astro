@@ -153,6 +153,13 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
   .cta-secondary:hover { background: var(--surface-2) !important; border-color: var(--ink-3) !important; }
   .post-item:hover .pt, .pub-item:hover .rt { color: var(--interactive); }
   #all-writing-link:hover, #all-research-link:hover { color: var(--interactive-hover); }
+
+  :global([data-theme="dark"]) .tagline-chip[data-color="var(--interactive)"],
+  :global([data-theme="dark"]) .tagline-chip[data-color="var(--accent)"],
+  :global([data-theme="dark"]) .pub-tag[data-type="conference"],
+  :global([data-theme="dark"]) .pub-tag[data-type="workshop"] {
+    color: var(--ink-2) !important;
+  }
 </style>
 
 <script>
@@ -176,13 +183,15 @@ const pubs = (await getCollection('research')).map(p => p.data).sort((a, b) => b
     const taglinesContainer = document.getElementById('taglines-container');
     if (taglinesContainer) {
       const colors = ['var(--interactive)', 'var(--ink-2)', 'var(--accent)', 'var(--ink-3)'];
-      taglinesContainer.innerHTML = t.taglines.map((tag, i) => `
-        <span style="
+      taglinesContainer.innerHTML = t.taglines.map((tag, i) => {
+        const bg = colors[i % colors.length];
+        return `
+        <span class="tagline-chip" data-color="${bg}" style="
           font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
-          background: ${colors[i % colors.length]}; color: var(--surface);
+          background: ${bg}; color: var(--surface);
           border-radius: 3px; padding: 5px 11px; display: inline-block; line-height: 1;
         ">${tag}</span>
-      `).join('');
+      `}).join('');
     }
 
     // Writing
