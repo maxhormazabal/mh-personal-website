@@ -1,0 +1,460 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import { ViewTransitions } from 'astro:transitions';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Max Hormazábal — Links</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <ViewTransitions />
+
+    <script is:inline>
+      // Initialize Theme
+      const getTheme = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('mh-dark')) {
+          return localStorage.getItem('mh-dark') === 'true';
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      };
+      
+      const setTheme = (isDark) => {
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+        localStorage.setItem('mh-dark', isDark);
+      };
+
+      setTheme(getTheme());
+
+      // Initialize Accent
+      const getAccent = () => {
+        return localStorage.getItem('mh-accent') || 'amber';
+      };
+
+      const applyAccent = (accent) => {
+        const root = document.documentElement;
+        const accents = {
+          amber:  ['oklch(58% 0.14 55)', 'oklch(48% 0.14 45)', 'oklch(46% 0.12 42)', 'oklch(38% 0.12 42)'],
+          slate:  ['oklch(55% 0.10 255)', 'oklch(45% 0.10 255)', 'oklch(50% 0.10 255)', 'oklch(42% 0.10 255)'],
+          forest: ['oklch(50% 0.11 150)', 'oklch(42% 0.11 150)', 'oklch(48% 0.11 150)', 'oklch(40% 0.11 150)'],
+        };
+        const vals = accents[accent] || accents.amber;
+        root.style.setProperty('--accent',              vals[0]);
+        root.style.setProperty('--accent-hover',         vals[1]);
+        root.style.setProperty('--interactive',          vals[2]);
+        root.style.setProperty('--interactive-hover',    vals[3]);
+        localStorage.setItem('mh-accent', accent);
+      };
+
+      applyAccent(getAccent());
+
+      // Listen for transitions to re-apply theme/accent
+      document.addEventListener('astro:after-swap', () => {
+        setTheme(getTheme());
+        applyAccent(getAccent());
+      });
+    </script>
+  </head>
+  <body>
+    <div class="linktree-wrapper">
+      {/* Floating minimal controls */}
+      <div class="floating-controls">
+        <button id="theme-toggle" title="Toggle theme" class="control-btn">
+          <Icon name="moon" size={12} class="theme-icon-moon" />
+          <Icon name="sun" size={12} class="theme-icon-sun" />
+        </button>
+        <button id="lang-toggle" title="Toggle language" class="control-btn font-mono">
+          <span class="lang-text">EN</span>
+        </button>
+      </div>
+
+      <div class="linktree-card-container">
+        {/* Profile Section */}
+        <header class="profile-header">
+          <div class="logo-avatar">
+            <img src="/logo_light.svg" class="logo-light" alt="Logo" width="48" height="48" />
+            <img src="/logo_dark.svg" class="logo-dark" alt="Logo" width="48" height="48" />
+          </div>
+          <h1 class="profile-name">Max Hormazábal</h1>
+          <p id="linktree-bio" class="profile-bio"></p>
+        </header>
+
+        {/* Links Stack */}
+        <main class="links-stack">
+          {[
+            { id: 'home',     href: '/',                                                 icon: 'user' },
+            { id: 'dokken',   href: 'https://dokken.ai',                                 icon: 'cpu', target: '_blank', rel: 'noopener' },
+            { id: 'scholar',  href: 'https://scholar.google.com/citations?user=jOUDgfEAAAAJ&hl=es', icon: 'book', target: '_blank', rel: 'noopener' },
+            { id: 'linkedin', href: 'https://www.linkedin.com/in/max-hormazabal/',       icon: 'linkedin', target: '_blank', rel: 'noopener' },
+            { id: 'github',   href: 'https://github.com/maxhormazabal',                 icon: 'github', target: '_blank', rel: 'noopener' },
+            { id: 'email',    href: 'mailto:mhormazabal@dokken.ai',                       icon: 'mail' },
+          ].map(item => (
+            <a href={item.href} target={item.target} rel={item.rel} class="linktree-card">
+              <div class="icon-circle">
+                <Icon name={item.icon} size={15} />
+              </div>
+              <div class="card-content">
+                <span id={`link-${item.id}-title`} class="card-title"></span>
+                <span id={`link-${item.id}-desc`} class="card-desc"></span>
+              </div>
+              <div class="arrow-container">
+                <Icon name="arrow-right" size={13} class="arrow-icon" />
+              </div>
+            </a>
+          ))}
+        </main>
+
+        {/* Footer */}
+        <footer class="linktree-footer">
+          <a href="/" class="back-link">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span id="linktree-back-text"></span>
+          </a>
+        </footer>
+      </div>
+    </div>
+
+    <style>
+      .linktree-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100%;
+        background: var(--surface);
+        padding: 64px 24px 48px;
+        box-sizing: border-box;
+        transition: background 0.2s;
+        position: relative;
+        overflow-y: auto;
+      }
+
+      .floating-controls {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        display: flex;
+        gap: 8px;
+        z-index: 20;
+      }
+
+      .control-btn {
+        background: none;
+        border: 1px solid var(--ink-5);
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--ink-4);
+        padding: 5px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.15s, border-color 0.15s, background 0.15s;
+      }
+
+      .control-btn:hover {
+        color: var(--ink);
+        border-color: var(--ink-3);
+        background: var(--surface-2);
+      }
+
+      .font-mono {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 0.06em;
+      }
+
+      /* Theme icon visibility */
+      :global([data-theme="dark"] .theme-icon-sun) { display: block; }
+      :global([data-theme="dark"] .theme-icon-moon) { display: none; }
+      :global(:not([data-theme="dark"]) .theme-icon-sun) { display: none; }
+      :global(:not([data-theme="dark"]) .theme-icon-moon) { display: block; }
+
+      .linktree-card-container {
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto 0;
+      }
+
+      .profile-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 36px;
+      }
+
+      .logo-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 1px solid var(--ink-5);
+        background: var(--surface-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        transition: border-color 0.2s, background 0.2s;
+        box-shadow: 0 4px 16px oklch(14% 0.01 250 / 0.02);
+      }
+
+      .logo-light { display: block; }
+      .logo-dark { display: none; }
+
+      :global([data-theme="dark"]) .logo-light { display: none; }
+      :global([data-theme="dark"]) .logo-dark { display: block; }
+
+      .profile-name {
+        font-family: var(--font-display);
+        font-size: 28px;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin-bottom: 10px;
+      }
+
+      .profile-bio {
+        font-family: var(--font-body);
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink-2);
+        max-width: 390px;
+        margin: 0;
+        text-wrap: pretty;
+      }
+
+      .links-stack {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+
+      .linktree-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 20px;
+        border-radius: 6px;
+        border: 1px solid var(--ink-5);
+        background: var(--surface-2);
+        text-decoration: none;
+        transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .icon-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--surface-3);
+        color: var(--ink-3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.2s, color 0.2s, transform 0.2s;
+      }
+
+      .card-content {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .card-title {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink);
+        margin-bottom: 2px;
+        transition: color 0.2s;
+      }
+
+      .card-desc {
+        font-family: var(--font-body);
+        font-size: 12px;
+        color: var(--ink-3);
+        line-height: 1.45;
+        transition: color 0.2s;
+        text-align: left;
+      }
+
+      .arrow-container {
+        color: var(--ink-4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s, color 0.2s;
+      }
+
+      /* Hover Effects */
+      .linktree-card:hover {
+        border-color: var(--accent);
+        background: var(--surface-3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px oklch(14% 0.01 250 / 0.03);
+      }
+
+      .linktree-card:hover .icon-circle {
+        background: var(--accent);
+        color: var(--surface);
+        transform: scale(1.05);
+      }
+
+      .linktree-card:hover .card-title {
+        color: var(--interactive);
+      }
+
+      .linktree-card:hover .arrow-container {
+        transform: translateX(4px);
+        color: var(--accent);
+      }
+
+      .linktree-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--ink-3);
+        text-decoration: none;
+        transition: color 0.15s, transform 0.15s;
+        padding: 6px 12px;
+      }
+
+      .back-link:hover {
+        color: var(--interactive);
+      }
+
+      .back-link svg {
+        transition: transform 0.15s;
+      }
+
+      .back-link:hover svg {
+        transform: translateX(-3px);
+      }
+
+      @media (max-width: 480px) {
+        .linktree-wrapper {
+          padding: 40px 16px 32px;
+        }
+        
+        .floating-controls {
+          top: 16px;
+          right: 16px;
+        }
+
+        .profile-name {
+          font-size: 24px;
+        }
+
+        .profile-bio {
+          font-size: 13.5px;
+        }
+
+        .linktree-card {
+          padding: 12px 16px;
+          gap: 12px;
+        }
+
+        .icon-circle {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    </style>
+
+    <script>
+      import { T } from '../data/translations';
+
+      function updateContent() {
+        const lang = localStorage.getItem('mh-lang') || 'en';
+        const t = T[lang as keyof typeof T];
+
+        // Update tab title and tags
+        document.title = t.linktree_title;
+
+        const bioEl = document.getElementById('linktree-bio');
+        if (bioEl) bioEl.textContent = t.linktree_bio;
+
+        const backEl = document.getElementById('linktree-back-text');
+        if (backEl) backEl.textContent = t.linktree_back;
+
+        const langBtnText = document.querySelector('.lang-text');
+        if (langBtnText) langBtnText.textContent = lang === 'en' ? 'ES' : 'EN';
+
+        // Update link stack texts
+        const linkItems = [
+          { id: 'home',     title: t.linktree_home,     desc: t.linktree_home_desc },
+          { id: 'dokken',   title: t.linktree_dokken,   desc: t.linktree_dokken_desc },
+          { id: 'scholar',  title: t.linktree_scholar,  desc: t.linktree_scholar_desc },
+          { id: 'linkedin', title: t.linktree_linkedin, desc: t.linktree_linkedin_desc },
+          { id: 'github',   title: t.linktree_github,   desc: t.linktree_github_desc },
+          { id: 'email',    title: t.linktree_email,    desc: t.linktree_email_desc }
+        ];
+
+        linkItems.forEach(item => {
+          const titleEl = document.getElementById(`link-${item.id}-title`);
+          const descEl = document.getElementById(`link-${item.id}-desc`);
+          if (titleEl) titleEl.textContent = item.title;
+          if (descEl) descEl.textContent = item.desc;
+        });
+      }
+
+      // Initial run
+      updateContent();
+
+      // Control Listeners
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const next = !isDark;
+        document.documentElement.setAttribute('data-theme', next ? 'dark' : '');
+        localStorage.setItem('mh-dark', String(next));
+      });
+
+      document.getElementById('lang-toggle')?.addEventListener('click', () => {
+        const current = localStorage.getItem('mh-lang') || 'en';
+        const next = current === 'en' ? 'es' : 'en';
+        localStorage.setItem('mh-lang', next);
+        updateContent();
+        // Notify other elements if present
+        window.dispatchEvent(new CustomEvent('mh-lang-changed', { detail: { lang: next } }));
+      });
+
+      // Synchronize back-and-forth transitions
+      window.addEventListener('mh-lang-changed', updateContent);
+      document.addEventListener('astro:after-swap', updateContent);
+    </script>
+  </body>
+</html>
